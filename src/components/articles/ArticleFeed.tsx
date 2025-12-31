@@ -13,10 +13,10 @@ export function ArticleFeed({ articles }: ArticleFeedProps) {
           <span className="text-2xl">📝</span>
         </div>
         <h3 className="text-lg font-semibold text-foreground mb-2">
-          No articles yet
+          هنوز مقاله‌ای نیست
         </h3>
         <p className="text-sm text-muted-foreground max-w-xs">
-          Be the first to share your thoughts with the community.
+          اولین نفری باشید که دیدگاه خود را با جامعه به اشتراک می‌گذارد.
         </p>
       </div>
     );

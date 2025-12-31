@@ -11,6 +11,7 @@ import Profile from "./pages/Profile";
 import Write from "./pages/Write";
 import Auth from "./pages/Auth";
 import ArticleEditor from "./pages/ArticleEditor";
+import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
 
 const App = () => (
@@ -27,6 +28,7 @@ const App = () => (
           <Route path="/write" element={<Write />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/editor" element={<ArticleEditor />} />
+          <Route path="/admin" element={<AdminDashboard />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
