@@ -4,6 +4,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { ArrowRight, Heart, Bookmark, Share2, BadgeCheck } from "lucide-react";
 import { formatSolarShort } from "@/lib/solarHijri";
 import { cn } from "@/lib/utils";
+import { useArticleInteractions } from "@/hooks/useArticleInteractions";
+import { useComments } from "@/hooks/useComments";
+import { CommentSection } from "@/components/articles/CommentSection";
 
 interface ArticleData {
   id: string;
@@ -32,8 +35,23 @@ const Article = () => {
   const navigate = useNavigate();
   const [article, setArticle] = useState<ArticleData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isLiked, setIsLiked] = useState(false);
-  const [isBookmarked, setIsBookmarked] = useState(false);
+
+  const {
+    isLiked,
+    isBookmarked,
+    likeCount,
+    toggleLike,
+    toggleBookmark,
+  } = useArticleInteractions(id || "");
+
+  const {
+    comments,
+    loading: commentsLoading,
+    submitting,
+    userId,
+    addComment,
+    deleteComment,
+  } = useComments(id || "");
 
   useEffect(() => {
     if (id) {
@@ -62,7 +80,7 @@ const Article = () => {
       `)
       .eq("id", articleId)
       .eq("status", "published")
-      .single();
+      .maybeSingle();
 
     if (error || !data) {
       navigate("/");
@@ -131,17 +149,20 @@ const Article = () => {
           </button>
           <div className="flex items-center gap-3">
             <button
-              onClick={() => setIsLiked(!isLiked)}
-              className="p-2 transition-colors"
+              onClick={toggleLike}
+              className="flex items-center gap-1.5 p-2 transition-colors"
             >
               <Heart
                 size={22}
                 fill={isLiked ? "currentColor" : "none"}
                 className={cn(isLiked ? "text-rose-500" : "text-muted-foreground hover:text-foreground")}
               />
+              {likeCount > 0 && (
+                <span className="text-sm text-muted-foreground">{likeCount}</span>
+              )}
             </button>
             <button
-              onClick={() => setIsBookmarked(!isBookmarked)}
+              onClick={toggleBookmark}
               className="p-2 transition-colors"
             >
               <Bookmark
@@ -241,6 +262,18 @@ const Article = () => {
             ))}
           </div>
         )}
+
+        {/* Comments Section */}
+        <div className="mt-8 pt-6 border-t border-border">
+          <CommentSection
+            comments={comments}
+            loading={commentsLoading}
+            submitting={submitting}
+            userId={userId}
+            onAddComment={addComment}
+            onDeleteComment={deleteComment}
+          />
+        </div>
       </main>
     </div>
   );

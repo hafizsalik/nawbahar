@@ -2,14 +2,13 @@ import { Bookmark, Heart, BadgeCheck, Share2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { FeedArticle } from "@/hooks/useArticles";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
 import { formatSolarShort } from "@/lib/solarHijri";
+import { useArticleInteractions } from "@/hooks/useArticleInteractions";
 
 interface ArticleCardProps {
   article: FeedArticle;
 }
 
-// Get reputation ring color based on score
 function getReputationRing(score: number): string {
   if (score > 80) return "ring-2 ring-yellow-500 ring-offset-2 ring-offset-card";
   if (score > 50) return "ring-2 ring-blue-500 ring-offset-2 ring-offset-card";
@@ -17,9 +16,13 @@ function getReputationRing(score: number): string {
 }
 
 export function ArticleCard({ article }: ArticleCardProps) {
-  const [isBookmarked, setIsBookmarked] = useState(article.is_bookmarked || false);
-  const [isLiked, setIsLiked] = useState(article.is_liked || false);
-  const [likeCount, setLikeCount] = useState(article.save_count || 0);
+  const {
+    isLiked,
+    isBookmarked,
+    likeCount,
+    toggleLike,
+    toggleBookmark,
+  } = useArticleInteractions(article.id);
 
   const formatReadTime = (content: string) => {
     const words = content.split(/\s+/).length;
@@ -30,14 +33,13 @@ export function ArticleCard({ article }: ArticleCardProps) {
   const handleLike = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsLiked(!isLiked);
-    setLikeCount(prev => isLiked ? prev - 1 : prev + 1);
+    toggleLike();
   };
 
   const handleBookmark = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsBookmarked(!isBookmarked);
+    toggleBookmark();
   };
 
   const handleShare = (e: React.MouseEvent) => {
