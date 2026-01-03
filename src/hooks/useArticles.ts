@@ -30,32 +30,35 @@ export function usePublishedArticles() {
 
   const fetchArticles = async () => {
     setLoading(true);
-    const { data, error } = await supabase
+    
+    // First get articles
+    const { data: articlesData, error: articlesError } = await supabase
       .from("articles")
-      .select(`
-        id,
-        title,
-        content,
-        cover_image_url,
-        tags,
-        created_at,
-        save_count,
-        total_feed_rank,
-        profiles:author_id(
-          display_name,
-          avatar_url,
-          specialty,
-          reputation_score
-        )
-      `)
+      .select("id, title, content, cover_image_url, tags, created_at, save_count, total_feed_rank, author_id")
       .eq("status", "published")
       .order("created_at", { ascending: false });
 
-    if (error) {
-      setError(error.message);
+    if (articlesError) {
+      setError(articlesError.message);
       setArticles([]);
-    } else {
-      const transformed: FeedArticle[] = (data || []).map((item: any) => ({
+      setLoading(false);
+      return;
+    }
+
+    // Get unique author IDs
+    const authorIds = [...new Set((articlesData || []).map(a => a.author_id))];
+    
+    // Fetch profiles for those authors
+    const { data: profilesData } = await supabase
+      .from("profiles")
+      .select("id, display_name, avatar_url, specialty, reputation_score")
+      .in("id", authorIds);
+
+    const profilesMap = new Map((profilesData || []).map(p => [p.id, p]));
+
+    const transformed: FeedArticle[] = (articlesData || []).map((item) => {
+      const profile = profilesMap.get(item.author_id);
+      return {
         id: item.id,
         title: item.title,
         content: item.content,
@@ -63,15 +66,16 @@ export function usePublishedArticles() {
         tags: item.tags || [],
         created_at: item.created_at,
         save_count: item.save_count || 0,
-        author: item.profiles ? {
-          display_name: item.profiles.display_name,
-          avatar_url: item.profiles.avatar_url,
-          specialty: item.profiles.specialty,
-          reputation_score: item.profiles.reputation_score || 0,
+        author: profile ? {
+          display_name: profile.display_name,
+          avatar_url: profile.avatar_url,
+          specialty: profile.specialty,
+          reputation_score: profile.reputation_score || 0,
         } : undefined,
-      }));
-      setArticles(transformed);
-    }
+      };
+    });
+
+    setArticles(transformed);
     setLoading(false);
   };
 
