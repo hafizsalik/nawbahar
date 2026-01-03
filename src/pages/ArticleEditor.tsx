@@ -1,18 +1,21 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowRight, Send } from "lucide-react";
+import { ArrowRight, Send, ImagePlus, X } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
 
 const ArticleEditor = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [coverImage, setCoverImage] = useState<File | null>(null);
+  const [coverPreview, setCoverPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -56,11 +59,32 @@ const ArticleEditor = () => {
     setLoading(true);
 
     try {
+      let coverImageUrl = null;
+      
+      // Upload cover image if exists
+      if (coverImage) {
+        const fileExt = coverImage.name.split('.').pop();
+        const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+        
+        const { error: uploadError } = await supabase.storage
+          .from('article-covers')
+          .upload(fileName, coverImage);
+        
+        if (uploadError) throw uploadError;
+        
+        const { data: urlData } = supabase.storage
+          .from('article-covers')
+          .getPublicUrl(fileName);
+        
+        coverImageUrl = urlData.publicUrl;
+      }
+
       const { error } = await supabase.from("articles").insert({
         title: title.trim(),
         content: content.trim(),
         author_id: user.id,
         status: "published",
+        cover_image_url: coverImageUrl,
       });
 
       if (error) throw error;
@@ -78,6 +102,22 @@ const ArticleEditor = () => {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setCoverImage(file);
+      setCoverPreview(URL.createObjectURL(file));
+    }
+  };
+
+  const removeCoverImage = () => {
+    setCoverImage(null);
+    setCoverPreview(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
     }
   };
 
@@ -108,6 +148,35 @@ const ArticleEditor = () => {
       {/* Editor */}
       <main className="max-w-screen-md mx-auto p-4 pb-20">
         <div className="space-y-4">
+          {/* Cover Image Upload */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleImageSelect}
+            className="hidden"
+          />
+          
+          {coverPreview ? (
+            <div className="relative rounded-xl overflow-hidden">
+              <img src={coverPreview} alt="Cover" className="w-full h-48 object-cover" />
+              <button
+                onClick={removeCoverImage}
+                className="absolute top-2 left-2 p-1.5 bg-background/80 rounded-full hover:bg-background"
+              >
+                <X size={18} />
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="w-full h-32 border-2 border-dashed border-border rounded-xl flex flex-col items-center justify-center gap-2 text-muted-foreground hover:border-primary hover:text-primary transition-colors"
+            >
+              <ImagePlus size={28} />
+              <span className="text-sm">افزودن تصویر کاور</span>
+            </button>
+          )}
+          
           <Input
             placeholder="عنوان مقاله..."
             value={title}
