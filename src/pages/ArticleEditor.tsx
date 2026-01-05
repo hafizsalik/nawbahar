@@ -83,7 +83,7 @@ const ArticleEditor = () => {
         title: title.trim(),
         content: content.trim(),
         author_id: user.id,
-        status: "published",
+        status: "pending",
         cover_image_url: coverImageUrl,
       });
 
@@ -91,7 +91,7 @@ const ArticleEditor = () => {
 
       toast({
         title: "موفق!",
-        description: "مقاله شما با موفقیت منتشر شد",
+        description: "مقاله شما ثبت شد و پس از بررسی منتشر خواهد شد",
       });
       navigate("/");
     } catch (error: any) {
