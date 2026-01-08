@@ -7,7 +7,7 @@ import { ArticleMenu } from "./ArticleMenu";
 import { useUserRole } from "@/hooks/useUserRole";
 import { FollowButton } from "@/components/FollowButton";
 import { useCitations } from "@/hooks/useCitations";
-
+import { useLatestComment } from "@/hooks/useLatestComment";
 interface ArticleCardProps {
   article: FeedArticle;
   onDelete?: () => void;
@@ -52,7 +52,7 @@ export function ArticleCard({ article, onDelete }: ArticleCardProps) {
     toggleBookmark,
   } = useArticleInteractions(article.id);
   const { citationCount } = useCitations(article.id);
-
+  const { latestComment } = useLatestComment(article.id);
   const handleLike = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -71,9 +71,9 @@ export function ArticleCard({ article, onDelete }: ArticleCardProps) {
     <article className="bg-card border-b border-border animate-fade-in">
       <Link to={`/article/${article.id}`} className="block">
         {/* Header: Menu Left, Author Right (RTL) */}
-        <div className="flex flex-row-reverse items-center justify-between px-4 pt-4 pb-3">
-          {/* Author - Right side (appears first in flex-row-reverse) */}
-          <div className="flex flex-row-reverse items-center gap-2.5">
+        <div className="flex items-center justify-between px-4 pt-4 pb-3" dir="rtl">
+          {/* Author - Right side in RTL */}
+          <div className="flex items-center gap-2.5">
             <div className={cn("rounded-full", getReputationRing(reputationScore))}>
               {article.author?.avatar_url ? (
                 <img
@@ -89,16 +89,16 @@ export function ArticleCard({ article, onDelete }: ArticleCardProps) {
                 </div>
               )}
             </div>
-            <div className="flex flex-col items-end">
+            <div className="flex flex-col items-start">
               <div className="flex items-center gap-1">
+                <span className="text-sm font-medium text-foreground">
+                  {article.author?.display_name}
+                </span>
                 {reputationScore >= 70 && (
                   <BadgeCheck size={14} className={cn(
                     reputationScore >= 90 ? "text-yellow-500" : "text-green-500"
                   )} />
                 )}
-                <span className="text-sm font-medium text-foreground">
-                  {article.author?.display_name}
-                </span>
               </div>
               {article.author?.specialty && (
                 <span className="text-xs text-muted-foreground">
@@ -106,10 +106,12 @@ export function ArticleCard({ article, onDelete }: ArticleCardProps) {
                 </span>
               )}
             </div>
-            <FollowButton userId={article.author_id} />
+            <div onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
+              <FollowButton userId={article.author_id} />
+            </div>
           </div>
 
-          {/* Menu - Left side */}
+          {/* Menu - Left side in RTL (appears on left) */}
           <div onClick={(e) => e.preventDefault()}>
             <ArticleMenu
               articleId={article.id}
@@ -158,8 +160,8 @@ export function ArticleCard({ article, onDelete }: ArticleCardProps) {
         )}
 
         {/* Footer Actions with Metadata */}
-        <div className="px-4 pb-4 flex items-center justify-between">
-          {/* Actions - Right side */}
+        <div className="px-4 pb-3 flex items-center justify-between" dir="rtl">
+          {/* Actions - Right side in RTL */}
           <div className="flex items-center gap-5">
             {/* Like */}
             <button
@@ -208,13 +210,23 @@ export function ArticleCard({ article, onDelete }: ArticleCardProps) {
             </button>
           </div>
 
-          {/* Metadata - Left side */}
+          {/* Metadata - Left side in RTL */}
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <span>{calculateReadTime(article.content)}</span>
             <span>•</span>
             <span>{formatRelativeDate(article.created_at)}</span>
           </div>
         </div>
+
+        {/* Comment Teaser */}
+        {latestComment && (
+          <div className="px-4 pb-4 border-t border-border/50 pt-3" dir="rtl">
+            <div className="flex items-start gap-2 text-sm">
+              <span className="font-medium text-foreground">{latestComment.author_name}:</span>
+              <span className="text-muted-foreground line-clamp-1 flex-1">{latestComment.content}</span>
+            </div>
+          </div>
+        )}
       </Link>
     </article>
   );
