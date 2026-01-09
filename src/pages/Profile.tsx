@@ -1,20 +1,26 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { AppLayout } from "@/components/layout/AppLayout";
-import { LogIn, Moon, Sun, Type, LogOut, Shield } from "lucide-react";
+import { LogIn, Moon, Sun, Type, LogOut, Shield, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
 import { useUserRole } from "@/hooks/useUserRole";
+import { useFollowStats } from "@/hooks/useFollowStats";
 import { ProfileHeader } from "@/components/profile/ProfileHeader";
 import { EditProfileModal } from "@/components/profile/EditProfileModal";
 import { formatSolarShort } from "@/lib/solarHijri";
 
 const Profile = () => {
+  const { userId: paramUserId } = useParams();
   const { user, signOut } = useAuth();
-  const { profile, articles, bookmarks, loading, refetch } = useProfile(user?.id);
+  const viewingUserId = paramUserId || user?.id;
+  const isOwnProfile = !paramUserId || paramUserId === user?.id;
+  
+  const { profile, articles, bookmarks, loading, refetch } = useProfile(viewingUserId);
   const { isAdmin } = useUserRole();
+  const { followerCount, followingCount } = useFollowStats(viewingUserId);
   const navigate = useNavigate();
   
   const [isDark, setIsDark] = useState(false);
@@ -48,16 +54,16 @@ const Profile = () => {
     navigate("/");
   };
 
-  // Not logged in - show sign in card
-  if (!user) {
+  // Not logged in and viewing own profile - show sign in card
+  if (!user && isOwnProfile) {
     return (
       <AppLayout>
         <div className="p-4 space-y-8">
           <div className="flex flex-col items-center py-8 px-4 bg-card rounded-2xl border border-border/60">
             <div className="w-20 h-20 rounded-2xl bg-primary flex items-center justify-center mb-4">
-              <span className="text-3xl font-bold text-primary-foreground">ف</span>
+              <span className="text-3xl font-bold text-primary-foreground">ن</span>
             </div>
-            <h2 className="text-xl font-semibold mb-2">به فطرت خوش آمدید</h2>
+            <h2 className="text-xl font-semibold mb-2">به نوبهار خوش آمدید</h2>
             <p className="text-muted-foreground text-sm text-center mb-6 max-w-xs">
               برای ذخیره مقالات، دنبال کردن نویسندگان و اشتراک‌گذاری صدای خود وارد شوید.
             </p>
@@ -102,13 +108,27 @@ const Profile = () => {
             avatarUrl={profile.avatar_url}
             specialty={profile.specialty}
             reputationScore={profile.reputation_score}
-            isOwnProfile={true}
+            isOwnProfile={isOwnProfile}
             onEditClick={() => setEditModalOpen(true)}
           />
         )}
 
-        {/* Admin Button */}
-        {isAdmin && (
+        {/* Follow Stats */}
+        <div className="flex items-center justify-center gap-8 py-3 bg-muted/30 rounded-xl">
+          <div className="flex items-center gap-2 text-sm">
+            <Users size={16} className="text-muted-foreground" />
+            <span className="font-semibold">{followerCount}</span>
+            <span className="text-muted-foreground">دنبال‌کننده</span>
+          </div>
+          <div className="w-px h-4 bg-border" />
+          <div className="flex items-center gap-2 text-sm">
+            <span className="font-semibold">{followingCount}</span>
+            <span className="text-muted-foreground">دنبال‌شده</span>
+          </div>
+        </div>
+
+        {/* Admin Button - only for own profile */}
+        {isOwnProfile && isAdmin && (
           <Link to="/admin">
             <Button variant="outline" className="w-full gap-2">
               <Shield size={18} />
@@ -117,11 +137,11 @@ const Profile = () => {
           </Link>
         )}
 
-        {/* Tabs: My Articles / Saved */}
+        {/* Tabs: My Articles / Saved (saved only for own profile) */}
         <Tabs defaultValue="articles" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="articles">مقالات من</TabsTrigger>
-            <TabsTrigger value="saved">ذخیره شده</TabsTrigger>
+          <TabsList className={`grid w-full ${isOwnProfile ? 'grid-cols-2' : 'grid-cols-1'}`}>
+            <TabsTrigger value="articles">مقالات</TabsTrigger>
+            {isOwnProfile && <TabsTrigger value="saved">ذخیره شده</TabsTrigger>}
           </TabsList>
 
           <TabsContent value="articles" className="mt-4 space-y-3">
@@ -136,41 +156,46 @@ const Profile = () => {
             )}
           </TabsContent>
 
-          <TabsContent value="saved" className="mt-4 space-y-3">
-            {bookmarks.length === 0 ? (
-              <div className="text-center py-8 text-muted-foreground">
-                هنوز مقاله‌ای ذخیره نکرده‌اید
-              </div>
-            ) : (
-              bookmarks.map((article) => (
-                <ArticleListItem key={article.id} article={article} />
-              ))
-            )}
-          </TabsContent>
+          {isOwnProfile && (
+            <TabsContent value="saved" className="mt-4 space-y-3">
+              {bookmarks.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  هنوز مقاله‌ای ذخیره نکرده‌اید
+                </div>
+              ) : (
+                bookmarks.map((article) => (
+                  <ArticleListItem key={article.id} article={article} />
+                ))
+              )}
+            </TabsContent>
+          )}
         </Tabs>
 
-        {/* Settings */}
-        <SettingsSection
-          isDark={isDark}
-          setIsDark={setIsDark}
-          textSize={textSize}
-          setTextSize={setTextSize}
-          textSizes={textSizes}
-        />
+        {/* Settings & Sign Out - only for own profile */}
+        {isOwnProfile && (
+          <>
+            <SettingsSection
+              isDark={isDark}
+              setIsDark={setIsDark}
+              textSize={textSize}
+              setTextSize={setTextSize}
+              textSizes={textSizes}
+            />
 
-        {/* Sign Out */}
-        <Button
-          variant="outline"
-          onClick={handleSignOut}
-          className="w-full gap-2 text-destructive border-destructive/30 hover:bg-destructive hover:text-destructive-foreground"
-        >
-          <LogOut size={18} />
-          خروج از حساب
-        </Button>
+            <Button
+              variant="outline"
+              onClick={handleSignOut}
+              className="w-full gap-2 text-destructive border-destructive/30 hover:bg-destructive hover:text-destructive-foreground"
+            >
+              <LogOut size={18} />
+              خروج از حساب
+            </Button>
+          </>
+        )}
       </div>
 
       {/* Edit Profile Modal */}
-      {profile && (
+      {profile && isOwnProfile && user && (
         <EditProfileModal
           open={editModalOpen}
           onClose={() => setEditModalOpen(false)}
@@ -200,7 +225,7 @@ function ArticleListItem({ article }: { article: { id: string; title: string; co
         />
       ) : (
         <div className="w-16 h-16 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-          <span className="text-primary font-semibold text-lg">ف</span>
+          <span className="text-primary font-semibold text-lg">ن</span>
         </div>
       )}
       <div className="flex-1 min-w-0">

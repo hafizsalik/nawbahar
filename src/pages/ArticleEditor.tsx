@@ -17,7 +17,10 @@ const categories = [
   { id: "society", label: "جامعه", icon: "👥" },
   { id: "economy", label: "اقتصاد", icon: "📊" },
   { id: "health", label: "سلامت", icon: "🏥" },
+  { id: "other", label: "سایر", icon: "✏️" },
 ];
+
+const DRAFT_KEY = "nobahar_draft";
 
 interface SelectedCitation {
   id: string;
@@ -30,6 +33,7 @@ const ArticleEditor = () => {
   const [coverImage, setCoverImage] = useState<File | null>(null);
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
   const [category, setCategory] = useState("");
+  const [customCategory, setCustomCategory] = useState("");
   const [tagsInput, setTagsInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState<User | null>(null);
@@ -43,6 +47,29 @@ const ArticleEditor = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  // Load draft on mount
+  useEffect(() => {
+    const savedDraft = localStorage.getItem(DRAFT_KEY);
+    if (savedDraft) {
+      try {
+        const draft = JSON.parse(savedDraft);
+        if (draft.title) setTitle(draft.title);
+        if (draft.content) setContent(draft.content);
+        if (draft.category) setCategory(draft.category);
+        if (draft.customCategory) setCustomCategory(draft.customCategory);
+        if (draft.tagsInput) setTagsInput(draft.tagsInput);
+      } catch (e) {
+        console.error("Failed to load draft:", e);
+      }
+    }
+  }, []);
+
+  // Auto-save draft
+  useEffect(() => {
+    const draft = { title, content, category, customCategory, tagsInput };
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+  }, [title, content, category, customCategory, tagsInput]);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -124,7 +151,8 @@ const ArticleEditor = () => {
         .filter(tag => tag.length > 0);
       
       // Add category as the first tag if selected
-      const allTags = category ? [category, ...parsedTags] : parsedTags;
+      const finalCategory = category === "other" ? customCategory : category;
+      const allTags = finalCategory ? [finalCategory, ...parsedTags] : parsedTags;
 
       // Insert article with PUBLISHED status (instant publish)
       const { data: articleData, error } = await supabase.from("articles").insert({
@@ -147,6 +175,9 @@ const ArticleEditor = () => {
 
         await supabase.from("citations").insert(citationInserts);
       }
+
+      // Clear draft on successful publish
+      localStorage.removeItem(DRAFT_KEY);
 
       toast({
         title: "موفق!",
@@ -267,32 +298,43 @@ const ArticleEditor = () => {
           />
 
           {/* Category & Tags */}
-          <div className="flex flex-col sm:flex-row gap-3 py-2">
-            <Select value={category} onValueChange={setCategory}>
-              <SelectTrigger className="w-full sm:w-48">
-                <SelectValue placeholder="انتخاب دسته‌بندی" />
-              </SelectTrigger>
-              <SelectContent>
-                {categories.map((cat) => (
-                  <SelectItem key={cat.id} value={cat.id}>
-                    <span className="flex items-center gap-2">
-                      <span>{cat.icon}</span>
-                      <span>{cat.label}</span>
-                    </span>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <div className="flex flex-col gap-3 py-2">
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Select value={category} onValueChange={setCategory}>
+                <SelectTrigger className="w-full sm:w-48">
+                  <SelectValue placeholder="انتخاب دسته‌بندی" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((cat) => (
+                    <SelectItem key={cat.id} value={cat.id}>
+                      <span className="flex items-center gap-2">
+                        <span>{cat.icon}</span>
+                        <span>{cat.label}</span>
+                      </span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
-            <div className="flex-1 relative">
-              <Tag size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                placeholder="برچسب‌ها (با کاما جدا کنید)"
-                value={tagsInput}
-                onChange={(e) => setTagsInput(e.target.value)}
-                className="pr-10"
-              />
+              <div className="flex-1 relative">
+                <Tag size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  placeholder="برچسب‌ها (با کاما جدا کنید)"
+                  value={tagsInput}
+                  onChange={(e) => setTagsInput(e.target.value)}
+                  className="pr-10"
+                />
+              </div>
             </div>
+
+            {/* Custom Category Input */}
+            {category === "other" && (
+              <Input
+                placeholder="نام دسته‌بندی خود را بنویسید..."
+                value={customCategory}
+                onChange={(e) => setCustomCategory(e.target.value)}
+              />
+            )}
           </div>
 
           {/* Citation Search */}

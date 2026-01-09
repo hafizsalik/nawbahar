@@ -1,5 +1,5 @@
 import { Bookmark, Heart, MessageCircle, Quote, BadgeCheck } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import type { FeedArticle } from "@/hooks/useArticles";
 import { cn } from "@/lib/utils";
 import { useArticleInteractions } from "@/hooks/useArticleInteractions";
@@ -8,6 +8,7 @@ import { useUserRole } from "@/hooks/useUserRole";
 import { FollowButton } from "@/components/FollowButton";
 import { useCitations } from "@/hooks/useCitations";
 import { useLatestComment } from "@/hooks/useLatestComment";
+
 interface ArticleCardProps {
   article: FeedArticle;
   onDelete?: () => void;
@@ -43,6 +44,7 @@ function calculateReadTime(content: string): string {
 }
 
 export function ArticleCard({ article, onDelete }: ArticleCardProps) {
+  const navigate = useNavigate();
   const { isAdmin, userId } = useUserRole();
   const {
     isLiked,
@@ -65,6 +67,18 @@ export function ArticleCard({ article, onDelete }: ArticleCardProps) {
     toggleBookmark();
   };
 
+  const handleAuthorClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    navigate(`/profile/${article.author_id}`);
+  };
+
+  const handleCommentClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    navigate(`/article/${article.id}#comments`);
+  };
+
   const reputationScore = article.author?.reputation_score || 0;
 
   return (
@@ -74,7 +88,7 @@ export function ArticleCard({ article, onDelete }: ArticleCardProps) {
         <div className="flex items-center justify-between px-4 pt-4 pb-3" dir="rtl">
           {/* Author - Right side in RTL */}
           <div className="flex items-center gap-2.5">
-            <div className={cn("rounded-full", getReputationRing(reputationScore))}>
+            <button onClick={handleAuthorClick} className={cn("rounded-full", getReputationRing(reputationScore))}>
               {article.author?.avatar_url ? (
                 <img
                   src={article.author.avatar_url}
@@ -88,9 +102,9 @@ export function ArticleCard({ article, onDelete }: ArticleCardProps) {
                   </span>
                 </div>
               )}
-            </div>
+            </button>
             <div className="flex flex-col items-start">
-              <div className="flex items-center gap-1">
+              <button onClick={handleAuthorClick} className="flex items-center gap-1 hover:underline">
                 <span className="text-sm font-medium text-foreground">
                   {article.author?.display_name}
                 </span>
@@ -99,7 +113,7 @@ export function ArticleCard({ article, onDelete }: ArticleCardProps) {
                     reputationScore >= 90 ? "text-yellow-500" : "text-green-500"
                   )} />
                 )}
-              </div>
+              </button>
               {article.author?.specialty && (
                 <span className="text-xs text-muted-foreground">
                   {article.author.specialty}
@@ -182,9 +196,12 @@ export function ArticleCard({ article, onDelete }: ArticleCardProps) {
             </button>
 
             {/* Comment */}
-            <div className="flex items-center gap-1.5 text-muted-foreground">
+            <button
+              onClick={handleCommentClick}
+              className="flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors"
+            >
               <MessageCircle size={20} strokeWidth={1.5} />
-            </div>
+            </button>
 
             {/* Citation/Quote */}
             <div className="flex items-center gap-1.5 text-muted-foreground">
@@ -220,9 +237,9 @@ export function ArticleCard({ article, onDelete }: ArticleCardProps) {
 
         {/* Comment Teaser */}
         {latestComment && (
-          <div className="px-4 pb-4 border-t border-border/50 pt-3" dir="rtl">
-            <div className="flex items-start gap-2 text-sm">
-              <span className="font-medium text-foreground">{latestComment.author_name}:</span>
+          <div className="px-4 pb-4 pt-2" dir="rtl">
+            <div className="flex items-start gap-2 text-sm bg-muted/50 rounded-lg px-3 py-2">
+              <span className="font-medium text-foreground shrink-0">{latestComment.author_name}:</span>
               <span className="text-muted-foreground line-clamp-1 flex-1">{latestComment.content}</span>
             </div>
           </div>

@@ -75,6 +75,18 @@ const Article = () => {
     }
   }, [id]);
 
+  // Scroll to comments if hash is #comments
+  useEffect(() => {
+    if (window.location.hash === "#comments" && !loading) {
+      const commentsSection = document.getElementById("comments");
+      if (commentsSection) {
+        setTimeout(() => {
+          commentsSection.scrollIntoView({ behavior: "smooth" });
+        }, 100);
+      }
+    }
+  }, [loading]);
+
   const fetchArticle = async (articleId: string) => {
     setLoading(true);
     
@@ -237,17 +249,18 @@ const Article = () => {
             )}
           </div>
           <div>
-            <div className="flex items-center gap-1.5">
-              <span className="font-medium text-foreground">
+              <Link to={`/profile/${article.author_id}`} className="flex items-center gap-1.5 hover:underline">
+                <span className="font-medium text-foreground">
+                  {article.author?.display_name}
+                </span>
+                {reputationScore > 80 && (
+                  <BadgeCheck size={16} className="text-yellow-500" />
+                )}
+                {reputationScore > 50 && reputationScore <= 80 && (
+                  <BadgeCheck size={16} className="text-blue-500" />
+                )}
+              </Link>
                 {article.author?.display_name}
-              </span>
-              {reputationScore > 80 && (
-                <BadgeCheck size={16} className="text-yellow-500" />
-              )}
-              {reputationScore > 50 && reputationScore <= 80 && (
-                <BadgeCheck size={16} className="text-blue-500" />
-              )}
-            </div>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               {article.author?.specialty && (
                 <>
@@ -321,7 +334,7 @@ const Article = () => {
         )}
 
         {/* Comments Section */}
-        <div className="mt-8 pt-6 border-t border-border">
+        <div id="comments" className="mt-8 pt-6 border-t border-border">
           <CommentSection
             comments={comments}
             loading={commentsLoading}

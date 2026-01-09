@@ -1,4 +1,4 @@
-import { Home, Compass, Bookmark, User, PenTool } from "lucide-react";
+import { Home, Compass, Star, User, PenTool } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
@@ -6,7 +6,7 @@ const navItems = [
   { icon: Home, path: "/" },
   { icon: Compass, path: "/explore" },
   { icon: PenTool, path: "/write" },
-  { icon: Bookmark, path: "/bookmarks" },
+  { icon: Star, path: "/vip" },
   { icon: User, path: "/profile" },
 ];
 
@@ -14,7 +14,7 @@ export function BottomNav() {
   const location = useLocation();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-card border-t border-border safe-bottom">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-card border-t border-border safe-bottom">
       <div className="flex items-center justify-around max-w-lg mx-auto h-12">
         {navItems.map(({ icon: Icon, path }) => {
           const isActive = location.pathname === path;
