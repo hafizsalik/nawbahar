@@ -275,34 +275,40 @@ export type Database = {
           avatar_url: string | null
           created_at: string
           display_name: string
+          facebook_url: string | null
           id: string
           interests: string[] | null
           real_name: string | null
           reputation_score: number | null
           specialty: string | null
           updated_at: string
+          whatsapp_number: string | null
         }
         Insert: {
           avatar_url?: string | null
           created_at?: string
           display_name: string
+          facebook_url?: string | null
           id: string
           interests?: string[] | null
           real_name?: string | null
           reputation_score?: number | null
           specialty?: string | null
           updated_at?: string
+          whatsapp_number?: string | null
         }
         Update: {
           avatar_url?: string | null
           created_at?: string
           display_name?: string
+          facebook_url?: string | null
           id?: string
           interests?: string[] | null
           real_name?: string | null
           reputation_score?: number | null
           specialty?: string | null
           updated_at?: string
+          whatsapp_number?: string | null
         }
         Relationships: []
       }
@@ -332,6 +338,8 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_follower_count: { Args: { target_user_id: string }; Returns: number }
+      get_following_count: { Args: { target_user_id: string }; Returns: number }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
