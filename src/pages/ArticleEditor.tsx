@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { ArrowRight, Send, ImagePlus, X, Tag, Quote, Search } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useArticleSearch } from "@/hooks/useCitations";
+import { compressArticleImage } from "@/lib/imageCompression";
 import type { User } from "@supabase/supabase-js";
 
 const categories = [
@@ -195,23 +196,32 @@ const ArticleEditor = () => {
     }
   };
 
-  const MAX_IMAGE_SIZE = 300 * 1024; // 300KB
-
-  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (file.size > MAX_IMAGE_SIZE) {
+    try {
+      toast({
+        title: "در حال فشرده‌سازی...",
+        description: "تصویر در حال بهینه‌سازی است",
+      });
+
+      const compressedFile = await compressArticleImage(file);
+      
+      setCoverImage(compressedFile);
+      setCoverPreview(URL.createObjectURL(compressedFile));
+      
+      toast({
+        title: "موفق",
+        description: `تصویر بهینه شد: ${Math.round(compressedFile.size / 1024)} کیلوبایت`,
+      });
+    } catch (error) {
       toast({
         title: "خطا",
-        description: "حجم تصویر بیش از حد مجاز است. لطفاً تصویری کمتر از ۳۰۰ کیلوبایت انتخاب کنید.",
+        description: "مشکلی در پردازش تصویر پیش آمد",
         variant: "destructive",
       });
-      return;
     }
-
-    setCoverImage(file);
-    setCoverPreview(URL.createObjectURL(file));
   };
 
   const removeCoverImage = () => {

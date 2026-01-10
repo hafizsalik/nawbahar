@@ -11,8 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Camera } from "lucide-react";
-
-const MAX_IMAGE_SIZE = 300 * 1024; // 300KB
+import { compressProfileImage } from "@/lib/imageCompression";
 
 interface EditProfileModalProps {
   open: boolean;
@@ -41,21 +40,32 @@ export function EditProfileModal({
   const [avatarPreview, setAvatarPreview] = useState<string | null>(currentAvatarUrl);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleAvatarSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAvatarSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (file.size > MAX_IMAGE_SIZE) {
+    try {
+      toast({
+        title: "در حال فشرده‌سازی...",
+        description: "تصویر در حال بهینه‌سازی است",
+      });
+
+      const compressedFile = await compressProfileImage(file);
+      
+      setAvatarFile(compressedFile);
+      setAvatarPreview(URL.createObjectURL(compressedFile));
+      
+      toast({
+        title: "موفق",
+        description: `تصویر بهینه شد: ${Math.round(compressedFile.size / 1024)} کیلوبایت`,
+      });
+    } catch (error) {
       toast({
         title: "خطا",
-        description: "حجم تصویر بیش از حد مجاز است. لطفاً تصویری کمتر از ۳۰۰ کیلوبایت انتخاب کنید.",
+        description: "مشکلی در پردازش تصویر پیش آمد",
         variant: "destructive",
       });
-      return;
     }
-
-    setAvatarFile(file);
-    setAvatarPreview(URL.createObjectURL(file));
   };
 
   const handleSave = async () => {
@@ -159,7 +169,7 @@ export function EditProfileModal({
               </div>
             </button>
             <p className="text-xs text-muted-foreground mt-2">
-              حداکثر ۳۰۰ کیلوبایت
+              تصاویر به صورت خودکار فشرده می‌شوند
             </p>
           </div>
 

@@ -137,29 +137,31 @@ export function ArticleCard({ article, onDelete }: ArticleCardProps) {
           </div>
         </div>
 
-        {/* Title - Center Aligned */}
+        {/* Title - Center Aligned with improved Persian readability */}
         <div className="px-4 pb-3">
-          <h3 className="text-lg font-bold text-foreground leading-relaxed line-clamp-2 text-center">
+          <h3 className="text-lg font-bold text-foreground leading-8 tracking-wide line-clamp-2 text-center">
             {article.title}
           </h3>
         </div>
 
-        {/* Cover Image */}
+        {/* Cover Image - Lazy loaded with fixed aspect ratio */}
         {article.cover_image_url && (
           <div className="px-4 pb-3">
-            <div className="aspect-video rounded-lg overflow-hidden">
+            <div className="aspect-video rounded-lg overflow-hidden bg-muted">
               <img
                 src={article.cover_image_url}
                 alt={article.title}
                 className="w-full h-full object-cover"
+                loading="lazy"
+                decoding="async"
               />
             </div>
           </div>
         )}
 
-        {/* Excerpt */}
+        {/* Excerpt - Improved Persian readability */}
         <div className="px-4 pb-2">
-          <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
+          <p className="text-sm text-muted-foreground leading-7 tracking-wide line-clamp-2">
             {article.content.substring(0, 140)}...
           </p>
         </div>

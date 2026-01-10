@@ -5,18 +5,17 @@ import { Link, useNavigate } from "react-router-dom";
 import { Heart, MessageCircle, UserPlus, Bell, CheckCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { formatDistanceToNow } from "date-fns";
 
 function getNotificationIcon(type: string) {
   switch (type) {
     case "like":
       return <Heart size={18} className="text-rose-500" fill="currentColor" />;
     case "comment":
-      return <MessageCircle size={18} className="text-blue-500" />;
+      return <MessageCircle size={18} className="text-primary" fill="currentColor" />;
     case "follow":
       return <UserPlus size={18} className="text-green-500" />;
     default:
-      return <Bell size={18} />;
+      return <Bell size={18} className="text-muted-foreground" />;
   }
 }
 
@@ -25,29 +24,41 @@ function getNotificationText(type: string, actorName: string, articleTitle?: str
     case "like":
       return (
         <>
-          <span className="font-semibold">{actorName}</span>
-          {" مقاله شما را پسندید: "}
-          {articleTitle && <span className="text-muted-foreground">«{articleTitle}»</span>}
+          <strong>{actorName}</strong> مقاله شما را پسندید
+          {articleTitle && <span className="text-muted-foreground">: «{articleTitle}»</span>}
         </>
       );
     case "comment":
       return (
         <>
-          <span className="font-semibold">{actorName}</span>
-          {" روی مقاله شما نظر داد: "}
-          {articleTitle && <span className="text-muted-foreground">«{articleTitle}»</span>}
+          <strong>{actorName}</strong> روی مقاله شما نظر داد
+          {articleTitle && <span className="text-muted-foreground">: «{articleTitle}»</span>}
         </>
       );
     case "follow":
       return (
         <>
-          <span className="font-semibold">{actorName}</span>
-          {" شما را دنبال کرد"}
+          <strong>{actorName}</strong> شما را دنبال کرد
         </>
       );
     default:
-      return "اعلان جدید";
+      return <span>اعلان جدید</span>;
   }
+}
+
+function formatRelativeTime(dateString: string): string {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMs / 3600000);
+  const diffDays = Math.floor(diffMs / 86400000);
+
+  if (diffMins < 1) return "همین الان";
+  if (diffMins < 60) return `${diffMins} دقیقه پیش`;
+  if (diffHours < 24) return `${diffHours} ساعت پیش`;
+  if (diffDays < 7) return `${diffDays} روز پیش`;
+  return `${Math.floor(diffDays / 7)} هفته پیش`;
 }
 
 const Notifications = () => {
@@ -78,14 +89,14 @@ const Notifications = () => {
     <AppLayout>
       <div className="min-h-screen">
         {/* Header */}
-        <div className="sticky top-14 z-30 bg-background/95 backdrop-blur-sm border-b border-border px-4 py-3 flex items-center justify-between">
+        <div className="sticky top-11 z-30 bg-card border-b border-border px-4 py-3 flex items-center justify-between">
           <h1 className="text-lg font-semibold">اعلان‌ها</h1>
           {unreadCount > 0 && (
             <Button
               variant="ghost"
               size="sm"
               onClick={markAllAsRead}
-              className="text-xs gap-1.5"
+              className="text-xs gap-1.5 text-primary"
             >
               <CheckCheck size={16} />
               خواندن همه
@@ -121,8 +132,9 @@ const Notifications = () => {
                   "flex items-start gap-3 p-4 hover:bg-muted/50 transition-colors",
                   !notification.is_read && "bg-primary/5"
                 )}
+                dir="rtl"
               >
-                <div className="mt-1">
+                <div className="mt-0.5">
                   {getNotificationIcon(notification.type)}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -134,13 +146,11 @@ const Notifications = () => {
                     )}
                   </p>
                   <p className="text-xs text-muted-foreground mt-1">
-                    {formatDistanceToNow(new Date(notification.created_at), {
-                      addSuffix: true,
-                    })}
+                    {formatRelativeTime(notification.created_at)}
                   </p>
                 </div>
                 {!notification.is_read && (
-                  <div className="w-2 h-2 rounded-full bg-primary mt-2" />
+                  <div className="w-2 h-2 rounded-full bg-primary mt-2 shrink-0" />
                 )}
               </Link>
             ))}
