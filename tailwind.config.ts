@@ -18,17 +18,20 @@ export default {
   	extend: {
   		fontFamily: {
   			sans: [
-  				'Plus Jakarta Sans',
+  				'Work Sans',
   				'ui-sans-serif',
   				'system-ui',
-  				'sans-serif',
-  				'Apple Color Emoji',
-  				'Segoe UI Emoji',
-  				'Segoe UI Symbol',
-  				'Noto Color Emoji'
+  				'-apple-system',
+  				'BlinkMacSystemFont',
+  				'Segoe UI',
+  				'Roboto',
+  				'Helvetica Neue',
+  				'Arial',
+  				'Noto Sans',
+  				'sans-serif'
   			],
   			serif: [
-  				'Playfair Display',
+  				'Lora',
   				'ui-serif',
   				'Georgia',
   				'Cambria',
@@ -37,6 +40,7 @@ export default {
   				'serif'
   			],
   			mono: [
+  				'Inconsolata',
   				'ui-monospace',
   				'SFMono-Regular',
   				'Menlo',
@@ -109,7 +113,11 @@ export default {
   			md: 'var(--shadow-md)',
   			lg: 'var(--shadow-lg)',
   			card: 'var(--shadow-card)',
-  			'card-hover': 'var(--shadow-card-hover)'
+  			'card-hover': 'var(--shadow-card-hover)',
+  			'2xs': 'var(--shadow-2xs)',
+  			xs: 'var(--shadow-xs)',
+  			xl: 'var(--shadow-xl)',
+  			'2xl': 'var(--shadow-2xl)'
   		},
   		keyframes: {
   			'accordion-down': {
