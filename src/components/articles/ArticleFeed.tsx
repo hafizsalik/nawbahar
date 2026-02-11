@@ -12,7 +12,7 @@ export function ArticleFeed({ articles, onRefresh }: ArticleFeedProps) {
   if (articles.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-20 px-4 text-center animate-fade-in">
-        <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center mb-6">
+        <div className="w-20 h-20 rounded-2xl bg-primary/8 flex items-center justify-center mb-6">
           <span className="text-4xl">📝</span>
         </div>
         <h3 className="text-xl font-semibold text-foreground mb-3">
@@ -22,11 +22,7 @@ export function ArticleFeed({ articles, onRefresh }: ArticleFeedProps) {
           اولین نفری باشید که دیدگاه خود را با جامعه به اشتراک می‌گذارد.
         </p>
         {onRefresh && (
-          <Button 
-            variant="outline" 
-            onClick={onRefresh}
-            className="gap-2"
-          >
+          <Button variant="outline" onClick={onRefresh} className="gap-2">
             <RefreshCw size={16} />
             بارگذاری مجدد
           </Button>
@@ -36,12 +32,12 @@ export function ArticleFeed({ articles, onRefresh }: ArticleFeedProps) {
   }
 
   return (
-    <div className="py-3 space-y-3 px-3">
+    <div className="py-4 space-y-4 px-4">
       {articles.map((article, index) => (
         <div
           key={article.id}
           className="animate-slide-up"
-          style={{ animationDelay: `${Math.min(index * 40, 200)}ms` }}
+          style={{ animationDelay: `${Math.min(index * 50, 250)}ms` }}
         >
           <ArticleCard article={article} onDelete={onRefresh} />
         </div>

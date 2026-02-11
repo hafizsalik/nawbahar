@@ -102,11 +102,13 @@ export default {
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
   		},
-  		boxShadow: {
-  			sm: 'var(--shadow-sm)',
-  			md: 'var(--shadow-md)',
-  			lg: 'var(--shadow-lg)'
-  		},
+		boxShadow: {
+			sm: 'var(--shadow-sm)',
+			md: 'var(--shadow-md)',
+			lg: 'var(--shadow-lg)',
+			card: 'var(--shadow-card)',
+			'card-hover': 'var(--shadow-card-hover)'
+		},
   		keyframes: {
   			'accordion-down': {
   				from: {
