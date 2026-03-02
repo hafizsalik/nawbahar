@@ -108,11 +108,25 @@ const AdminDashboard = () => {
     setLoading(true);
     const { data, error } = await supabase
       .from("articles")
-      .select("id, title, content, author_id, status, created_at, view_count, total_feed_rank, editorial_score_science, editorial_score_ethics, editorial_score_writing, editorial_score_timing, editorial_score_innovation, profiles:author_id(display_name)")
+      .select("id, title, content, author_id, status, created_at, view_count, total_feed_rank, editorial_score_science, editorial_score_ethics, editorial_score_writing, editorial_score_timing, editorial_score_innovation")
       .eq("status", status)
       .order("created_at", { ascending: false });
-    if (error) toast({ title: "خطا", description: "خطا در دریافت مقالات", variant: "destructive" });
-    else setArticles((data || []).map((item: any) => ({ ...item, profiles: item.profiles })));
+    if (error) {
+      toast({ title: "خطا", description: error.message, variant: "destructive" });
+      setLoading(false);
+      return;
+    }
+    // Fetch profiles separately to avoid FK issues
+    const authorIds = [...new Set((data || []).map(a => a.author_id))];
+    const { data: profiles } = await supabase
+      .from("profiles")
+      .select("id, display_name")
+      .in("id", authorIds);
+    const profilesMap = new Map((profiles || []).map(p => [p.id, p]));
+    setArticles((data || []).map((item: any) => ({
+      ...item,
+      profiles: profilesMap.get(item.author_id) ? { display_name: profilesMap.get(item.author_id)!.display_name } : null,
+    })));
     setLoading(false);
   };
 

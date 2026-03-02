@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap');
 @import url("https://fonts.googleapis.com/css2?family=Figtree&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans&display=swap");
@@ -20,10 +20,10 @@
   :root {
     /* Warm Paper Editorial Palette */
     --background: 40 20% 98%;
-    --foreground: 220 20% 14%;
+    --foreground: 220 25% 10%;
 
     --card: 0 0% 100%;
-    --card-foreground: 220 20% 14%;
+    --card-foreground: 220 25% 10%;
 
     --popover: 0 0% 100%;
     --popover-foreground: 220 20% 14%;
@@ -36,7 +36,7 @@
     --secondary-foreground: 220 15% 25%;
 
     --muted: 40 12% 93%;
-    --muted-foreground: 220 8% 52%;
+    --muted-foreground: 220 10% 42%;
 
     --accent: 174 40% 40%;
     --accent-foreground: 0 0% 100%;
@@ -55,7 +55,7 @@
     --persian-green-light: 174 40% 92%;
     --persian-green-dark: 174 55% 24%;
     --cream: 40 20% 98%;
-    --ink: 220 20% 14%;
+    --ink: 220 25% 8%;
     --success: 152 60% 38%;
     --warning: 38 92% 50%;
 
@@ -173,6 +173,7 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-family: 'Vazirmatn', system-ui, sans-serif;
+    font-weight: 500;
     text-align: right;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
@@ -181,7 +182,7 @@
 
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Vazirmatn', system-ui, sans-serif;
-    @apply font-semibold tracking-tight;
+    @apply font-bold tracking-tight;
     color: hsl(var(--ink));
   }
 
