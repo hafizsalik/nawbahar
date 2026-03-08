@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Trash2, Send, ThumbsUp, CornerDownRight, MoreVertical, Flag } from "lucide-react";
+import { Trash2, Send, ThumbsUp, CornerDownRight, MoreVertical, Flag, FileText } from "lucide-react";
 import { getRelativeTime } from "@/lib/relativeTime";
 import { cn, toPersianNumber } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
@@ -15,6 +15,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import type { Comment } from "@/hooks/useComments";
 
+interface ResponseArticle {
+  id: string;
+  title: string;
+  created_at: string;
+  author: { display_name: string; avatar_url: string | null } | null;
+}
+
 interface CommentSectionProps {
   comments: Comment[];
   loading: boolean;
@@ -22,6 +29,7 @@ interface CommentSectionProps {
   userId: string | null;
   onAddComment: (content: string, parentId?: string) => Promise<boolean>;
   onDeleteComment: (commentId: string) => Promise<void>;
+  responses?: ResponseArticle[];
 }
 
 export function CommentSection({
