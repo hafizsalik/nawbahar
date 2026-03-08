@@ -93,8 +93,29 @@ serve(async (req) => {
   }
 
   try {
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    // Validate caller - must be service role (from triggers) or authenticated user
+    const authHeader = req.headers.get("Authorization") || "";
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const isServiceRole = authHeader === `Bearer ${serviceRoleKey}`;
+    
+    if (!isServiceRole) {
+      // Validate JWT for non-service-role callers
+      const { createClient } = await import("https://esm.sh/@supabase/supabase-js@2");
+      const supabaseAuth = createClient(
+        Deno.env.get("SUPABASE_URL")!,
+        Deno.env.get("SUPABASE_ANON_KEY")!,
+        { global: { headers: { Authorization: authHeader } } }
+      );
+      const token = authHeader.replace('Bearer ', '');
+      const { error: claimsError } = await supabaseAuth.auth.getClaims(token);
+      if (claimsError) {
+        return new Response(JSON.stringify({ error: "Unauthorized" }), {
+          status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+    }
+
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const vapidPublicKey = Deno.env.get("VAPID_PUBLIC_KEY") || "";
     const vapidPrivateKey = Deno.env.get("VAPID_PRIVATE_KEY") || "";
     const vapidEmail = Deno.env.get("VAPID_EMAIL") || "admin@nawbahar.lovable.app";
