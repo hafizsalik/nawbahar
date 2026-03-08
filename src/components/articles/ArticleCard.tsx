@@ -155,6 +155,7 @@ export function ArticleCard({ article, onDelete }: ArticleCardProps) {
         </div>
 
         <ArticleCardMetrics
+          articleId={article.id}
           viewCount={viewCount}
           commentCount={comments.length}
           responseCount={responseCount}

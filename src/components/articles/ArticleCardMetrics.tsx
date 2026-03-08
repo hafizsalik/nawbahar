@@ -1,15 +1,17 @@
 import { MessageCircle, CheckCheck, CornerUpRight } from "lucide-react";
 import { cn, toPersianNumber } from "@/lib/utils";
 import { ReactionPicker } from "./ReactionPicker";
+import { ReactionDetailsModal } from "./ReactionDetailsModal";
 import { REACTION_EMOJIS, type ReactionKey, type ReactionSummary } from "@/hooks/useCardReactions";
+import { useState } from "react";
 
 interface ArticleCardMetricsProps {
+  articleId: string;
   viewCount: number;
   commentCount: number;
   responseCount: number;
   isRead: boolean;
   commentsOpen: boolean;
-  tag?: string | null;
   onCommentClick: (e: React.MouseEvent) => void;
   onResponseClick: (e: React.MouseEvent) => void;
   reactionSummary: ReactionSummary;
@@ -17,6 +19,7 @@ interface ArticleCardMetricsProps {
 }
 
 export function ArticleCardMetrics({
+  articleId,
   commentCount,
   responseCount,
   isRead,
@@ -27,6 +30,7 @@ export function ArticleCardMetrics({
   onReact,
 }: ArticleCardMetricsProps) {
   const { topTypes, totalCount, reactorNames, userReaction } = reactionSummary;
+  const [showReactionDetails, setShowReactionDetails] = useState(false);
 
   const buildReactorText = () => {
     if (totalCount === 0) return null;
@@ -42,60 +46,79 @@ export function ArticleCardMetrics({
 
   const reactorText = buildReactorText();
 
+  const handleReactionSummaryClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setShowReactionDetails(true);
+  };
+
   return (
-    <div className="mt-3 pb-4">
-      <div className="flex items-center">
-        <div className="flex items-center gap-4">
-          <button
-            onClick={onCommentClick}
-            className={cn(
-              "flex items-center gap-1 text-[12px] transition-colors",
-              commentsOpen ? "text-foreground" : "text-muted-foreground hover:text-foreground"
-            )}
-          >
-            <MessageCircle size={14} strokeWidth={1.5} />
-            <span className="text-[11.5px]">
-              {commentCount > 0 ? `${toPersianNumber(commentCount)} نظر` : "نظر"}
-            </span>
-          </button>
-
-          {responseCount > 0 && (
+    <>
+      <div className="mt-3 pb-4">
+        <div className="flex items-center">
+          <div className="flex items-center gap-4">
             <button
-              onClick={onResponseClick}
-              className="flex items-center gap-1 text-[12px] text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <CornerUpRight size={13} strokeWidth={1.5} />
-              <span className="text-[11.5px]">{toPersianNumber(responseCount)}</span>
-            </button>
-          )}
-
-          <ReactionPicker userReaction={userReaction} onReact={onReact} />
-
-          {totalCount > 0 && (
-            <div className="flex items-center gap-1">
-              <div className="flex items-center -space-x-0.5">
-                {topTypes.slice(0, 2).map((type) => (
-                  <span
-                    key={type}
-                    className="w-[20px] h-[20px] flex items-center justify-center text-[14px] leading-none"
-                  >
-                    {REACTION_EMOJIS[type]}
-                  </span>
-                ))}
-              </div>
-              {reactorText && (
-                <span className="text-[10.5px] text-muted-foreground/45 truncate max-w-[110px]">
-                  {reactorText}
-                </span>
+              onClick={onCommentClick}
+              className={cn(
+                "flex items-center gap-1 text-[12px] transition-colors",
+                commentsOpen ? "text-foreground" : "text-muted-foreground hover:text-foreground"
               )}
-            </div>
-          )}
+            >
+              <MessageCircle size={14} strokeWidth={1.5} />
+              <span className="text-[11.5px]">
+                {commentCount > 0 ? `${toPersianNumber(commentCount)} نظر` : "نظر"}
+              </span>
+            </button>
 
-          {isRead && (
-            <CheckCheck size={12} strokeWidth={2} className="text-primary/35" />
-          )}
+            {responseCount > 0 && (
+              <button
+                onClick={onResponseClick}
+                className="flex items-center gap-1 text-[12px] text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <CornerUpRight size={13} strokeWidth={1.5} />
+                <span className="text-[11.5px]">{toPersianNumber(responseCount)}</span>
+              </button>
+            )}
+
+            <ReactionPicker userReaction={userReaction} onReact={onReact} />
+
+            {totalCount > 0 && (
+              <button
+                onClick={handleReactionSummaryClick}
+                className="flex items-center gap-1 hover:opacity-80 transition-opacity"
+              >
+                <div className="flex items-center -space-x-1">
+                  {topTypes.slice(0, 2).map((type) => (
+                    <span
+                      key={type}
+                      className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-muted/60 text-sm leading-none ring-1 ring-background"
+                      role="img"
+                      aria-label={type}
+                    >
+                      {REACTION_EMOJIS[type]}
+                    </span>
+                  ))}
+                </div>
+                {reactorText && (
+                  <span className="text-[10.5px] text-muted-foreground/50 truncate max-w-[120px] mr-0.5">
+                    {reactorText}
+                  </span>
+                )}
+              </button>
+            )}
+
+            {isRead && (
+              <CheckCheck size={12} strokeWidth={2} className="text-primary/35" />
+            )}
+          </div>
         </div>
       </div>
-    </div>
+
+      <ReactionDetailsModal
+        articleId={articleId}
+        isOpen={showReactionDetails}
+        onClose={() => setShowReactionDetails(false)}
+      />
+    </>
   );
 }
