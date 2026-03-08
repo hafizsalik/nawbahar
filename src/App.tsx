@@ -22,6 +22,7 @@ const Notifications = lazy(() => import("./pages/Notifications"));
 const VIP = lazy(() => import("./pages/VIP"));
 const About = lazy(() => import("./pages/About"));
 const Install = lazy(() => import("./pages/Install"));
+const Contact = lazy(() => import("./pages/Contact"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 function PageFallback() {
