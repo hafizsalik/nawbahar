@@ -55,8 +55,6 @@ const Profile = () => {
             </Link>
           </div>
 
-          {/* Suggested Writers even for logged-out users */}
-          <SuggestedWriters />
         </div>
       </AppLayout>
     );
