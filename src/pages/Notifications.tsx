@@ -18,6 +18,8 @@ function getNotificationIcon(type: string) {
       return <MessageCircle size={16} className="text-primary" fill="currentColor" />;
     case "follow":
       return <UserPlus size={16} className="text-foreground" />;
+    case "new_article":
+      return <Bell size={16} className="text-primary" />;
     default:
       return <Bell size={16} className="text-muted-foreground" />;
   }
@@ -43,6 +45,13 @@ function getNotificationText(type: string, actorName: string, articleTitle?: str
       return (
         <>
           <strong className="font-medium">{actorName}</strong> شما را دنبال کرد
+        </>
+      );
+    case "new_article":
+      return (
+        <>
+          <strong className="font-medium">{actorName}</strong> مقاله جدیدی منتشر کرد
+          {articleTitle && <span className="text-muted-foreground/60 block text-[11px] mt-0.5 line-clamp-1">«{articleTitle}»</span>}
         </>
       );
     default:
