@@ -180,14 +180,14 @@ const ArticleEditor = () => {
 
       // Step 3: Call AI evaluation (this will update status to published or rejected)
       const { data: evalData, error: evalError } = await supabase.functions.invoke("ai-score-article", {
-        body: { title: title.trim(), content: content.trim(), articleId: insertedArticle.id },
+        body: { title: title.trim(), content: content.trim(), articleId },
       });
 
       if (evalError) {
         // If AI fails, still publish (fail-open for now)
-        await supabase.from("articles").update({ status: "published" }).eq("id", insertedArticle.id);
+        await supabase.from("articles").update({ status: "published" }).eq("id", articleId);
         toast({ title: "✅ مقاله منتشر شد", description: "ارزیابی هوش مصنوعی در دسترس نبود" });
-        if (!responseToId) localStorage.removeItem(DRAFT_KEY);
+        if (!responseToId && !isEditMode) localStorage.removeItem(DRAFT_KEY);
         navigate("/");
         return;
       }
@@ -196,7 +196,7 @@ const ArticleEditor = () => {
       setReviewState("result");
 
       if (evalData.approved) {
-        if (!responseToId) localStorage.removeItem(DRAFT_KEY);
+        if (!responseToId && !isEditMode) localStorage.removeItem(DRAFT_KEY);
       }
     } catch (error: any) {
       toast({ title: "خطا", description: sanitizeError(error), variant: "destructive" });
