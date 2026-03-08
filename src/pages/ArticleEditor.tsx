@@ -284,31 +284,154 @@ const ArticleEditor = () => {
     { key: "innovation", label: "نوآوری", max: 5 },
   ] as const;
 
+  const [showSchedule, setShowSchedule] = useState(false);
+  const [scheduledDate, setScheduledDate] = useState("");
+  const [scheduledTime, setScheduledTime] = useState("");
+
+  const handleSaveDraft = async () => {
+    const titleError = validation.title.validate(title);
+    if (titleError) { toast({ title: "خطا", description: titleError, variant: "destructive" }); return; }
+    if (!user) { navigate("/auth"); return; }
+
+    setLoading(true);
+    try {
+      let coverImageUrl = coverPreview;
+      if (coverImage) {
+        const fileExt = coverImage.name.split('.').pop();
+        const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+        const { error: uploadError } = await supabase.storage.from('article-covers').upload(fileName, coverImage);
+        if (uploadError) throw uploadError;
+        const { data: urlData } = supabase.storage.from('article-covers').getPublicUrl(fileName);
+        coverImageUrl = urlData.publicUrl;
+      }
+
+      if (isEditMode && editId) {
+        await supabase.from("articles").update({
+          title: title.trim(), content: content.trim(), cover_image_url: coverImageUrl, tags, status: "pending",
+        }).eq("id", editId);
+      } else {
+        await supabase.from("articles").insert({
+          title: title.trim(), content: content.trim() || " ", author_id: user.id, status: "pending",
+          cover_image_url: coverImageUrl, parent_article_id: responseToId || null, tags,
+        });
+      }
+      localStorage.removeItem(DRAFT_KEY);
+      toast({ title: "✅ پیش‌نویس ذخیره شد" });
+      navigate("/profile");
+    } catch (error: any) {
+      toast({ title: "خطا", description: sanitizeError(error), variant: "destructive" });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSchedulePublish = async () => {
+    if (!scheduledDate || !scheduledTime) {
+      toast({ title: "خطا", description: "لطفاً تاریخ و ساعت انتشار را وارد کنید", variant: "destructive" });
+      return;
+    }
+    const titleError = validation.title.validate(title);
+    if (titleError) { toast({ title: "خطا", description: titleError, variant: "destructive" }); return; }
+    const contentError = validation.content.validate(content);
+    if (contentError) { toast({ title: "خطا", description: contentError, variant: "destructive" }); return; }
+    if (!user) { navigate("/auth"); return; }
+
+    setLoading(true);
+    try {
+      let coverImageUrl = coverPreview;
+      if (coverImage) {
+        const fileExt = coverImage.name.split('.').pop();
+        const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+        const { error: uploadError } = await supabase.storage.from('article-covers').upload(fileName, coverImage);
+        if (uploadError) throw uploadError;
+        const { data: urlData } = supabase.storage.from('article-covers').getPublicUrl(fileName);
+        coverImageUrl = urlData.publicUrl;
+      }
+
+      const scheduledAt = new Date(`${scheduledDate}T${scheduledTime}`).toISOString();
+
+      if (isEditMode && editId) {
+        await supabase.from("articles").update({
+          title: title.trim(), content: content.trim(), cover_image_url: coverImageUrl, tags,
+          status: "pending", scheduled_at: scheduledAt,
+        } as any).eq("id", editId);
+      } else {
+        await supabase.from("articles").insert({
+          title: title.trim(), content: content.trim(), author_id: user.id, status: "pending",
+          cover_image_url: coverImageUrl, parent_article_id: responseToId || null, tags,
+          scheduled_at: scheduledAt,
+        } as any);
+      }
+      localStorage.removeItem(DRAFT_KEY);
+      toast({ title: "✅ مقاله برای انتشار زمان‌بندی شد", description: `تاریخ: ${scheduledDate} ساعت: ${scheduledTime}` });
+      navigate("/profile");
+    } catch (error: any) {
+      toast({ title: "خطا", description: sanitizeError(error), variant: "destructive" });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-background border-b border-border">
         <div className="flex items-center justify-between px-4 h-11 max-w-screen-md mx-auto">
-          <button onClick={() => navigate("/")} className="p-2 -mr-2 text-muted-foreground hover:text-foreground transition-colors">
+          <button onClick={() => navigate(-1)} className="p-2 -mr-2 text-muted-foreground hover:text-foreground transition-colors">
             <ArrowRight size={20} strokeWidth={1.5} />
           </button>
           <h1 className="text-sm font-medium text-foreground">
-            {responseToId ? "نوشتن پاسخ" : "نوشتن مقاله"}
+            {isEditMode ? "ویرایش مقاله" : responseToId ? "نوشتن پاسخ" : "نوشتن مقاله"}
           </h1>
-          <Button 
-            onClick={handlePublish} 
-            disabled={loading || !title.trim() || !content.trim()} 
-            size="sm" 
-            className="gap-1.5 h-8 px-4"
-          >
-            {loading ? (
-              <Loader2 size={14} className="animate-spin" />
-            ) : (
-              <Send size={14} strokeWidth={1.5} />
-            )}
-            {loading ? "بررسی..." : "انتشار"}
-          </Button>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={handleSaveDraft}
+              disabled={loading || !title.trim()}
+              className="p-2 text-muted-foreground hover:text-foreground transition-colors disabled:opacity-30"
+              title="ذخیره پیش‌نویس"
+            >
+              <Save size={16} strokeWidth={1.5} />
+            </button>
+            <button
+              onClick={() => setShowSchedule(!showSchedule)}
+              disabled={loading}
+              className="p-2 text-muted-foreground hover:text-foreground transition-colors disabled:opacity-30"
+              title="زمان‌بندی انتشار"
+            >
+              <Clock size={16} strokeWidth={1.5} />
+            </button>
+            <Button 
+              onClick={handlePublish} 
+              disabled={loading || !title.trim() || !content.trim()} 
+              size="sm" 
+              className="gap-1.5 h-8 px-4"
+            >
+              {loading ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} strokeWidth={1.5} />}
+              {loading ? "..." : "انتشار"}
+            </Button>
+          </div>
         </div>
+        {/* Schedule bar */}
+        {showSchedule && (
+          <div className="flex items-center gap-2 px-4 py-2.5 border-t border-border/50 bg-muted/30">
+            <CalendarClock size={14} className="text-muted-foreground shrink-0" />
+            <input
+              type="date"
+              value={scheduledDate}
+              onChange={(e) => setScheduledDate(e.target.value)}
+              className="h-7 px-2 text-xs bg-background border border-border rounded-md flex-1"
+            />
+            <input
+              type="time"
+              value={scheduledTime}
+              onChange={(e) => setScheduledTime(e.target.value)}
+              className="h-7 px-2 text-xs bg-background border border-border rounded-md w-24"
+            />
+            <Button size="sm" variant="outline" className="h-7 text-xs px-3" onClick={handleSchedulePublish} disabled={loading}>
+              تنظیم
+            </Button>
+          </div>
+        )}
       </header>
 
       {/* Editor */}
