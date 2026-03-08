@@ -1,4 +1,4 @@
-import { MessageCircle, ThumbsUp, CheckCheck } from "lucide-react";
+import { MessageCircle, Hand, CheckCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ArticleCardMetricsProps {
@@ -41,7 +41,7 @@ export function ArticleCardMetrics({
             className="flex items-center gap-1.5 text-[12px] text-muted-foreground hover:text-accent transition-colors"
             title="پسندیدن"
           >
-            <ThumbsUp size={15} strokeWidth={1.5} />
+            <Hand size={15} strokeWidth={1.5} />
           </button>
 
           {isRead && (
