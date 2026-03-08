@@ -56,20 +56,6 @@ export function ArticleCard({ article, onDelete: _onDelete }: ArticleCardProps) 
   const coverImage = article.cover_image_url || defaultCover;
   const hasBeenRead = useMemo(() => isArticleRead(article.id), [article.id]);
 
-  // Build commenter names for summary (exclude self, deduplicate)
-  const { commenterNames, userHasCommented } = useMemo(() => {
-    const uniqueUsers = new Map<string, string>();
-    let hasCommented = false;
-    for (const c of comments) {
-      if (c.user_id === userId) {
-        hasCommented = true;
-      } else if (c.author?.display_name && !uniqueUsers.has(c.user_id)) {
-        uniqueUsers.set(c.user_id, c.author.display_name);
-      }
-    }
-    return { commenterNames: [...uniqueUsers.values()].slice(0, 2), userHasCommented: hasCommented };
-  }, [comments, userId]);
-
   const handleAuthorClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
