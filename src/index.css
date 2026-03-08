@@ -10,76 +10,75 @@
   }
 
   :root {
-    /* 🎨 نوبهار — Premium Persian Editorial */
-    /* Deep emerald-teal with warm gold accent */
-    --background: 48 30% 97%;
-    --foreground: 210 20% 12%;
+    /* 🎨 نوبهار — Warm Editorial + Social Energy */
+    --background: 30 20% 97%;
+    --foreground: 220 15% 13%;
 
     --card: 0 0% 100%;
-    --card-foreground: 210 20% 12%;
+    --card-foreground: 220 15% 13%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 210 18% 14%;
+    --popover-foreground: 220 12% 16%;
 
-    /* Deep Persian Emerald */
-    --primary: 168 55% 28%;
-    --primary-foreground: 48 30% 97%;
+    /* Warm dark teal — grounded, confident */
+    --primary: 174 40% 26%;
+    --primary-foreground: 30 20% 97%;
 
-    /* Warm Ivory */
-    --secondary: 42 25% 94%;
-    --secondary-foreground: 210 15% 28%;
+    /* Warm stone */
+    --secondary: 30 15% 93%;
+    --secondary-foreground: 220 10% 30%;
 
-    --muted: 42 18% 91%;
-    --muted-foreground: 210 8% 48%;
+    --muted: 30 12% 90%;
+    --muted-foreground: 220 6% 46%;
 
-    /* Gold accent */
-    --accent: 38 70% 52%;
-    --accent-foreground: 210 20% 12%;
+    /* Warm coral-amber — social energy */
+    --accent: 18 80% 55%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 42 15% 87%;
-    --input: 42 15% 87%;
-    --ring: 168 55% 28%;
+    --border: 30 12% 88%;
+    --input: 30 12% 88%;
+    --ring: 174 40% 26%;
 
     --radius: 1rem;
 
     /* Custom tokens */
-    --persian-green: 168 55% 28%;
-    --persian-green-light: 168 40% 93%;
-    --persian-green-dark: 168 60% 20%;
+    --persian-green: 174 40% 26%;
+    --persian-green-light: 174 30% 94%;
+    --persian-green-dark: 174 45% 18%;
     --gold: 38 70% 52%;
-    --gold-light: 42 60% 92%;
-    --cream: 48 30% 97%;
-    --ink: 210 20% 8%;
-    --success: 152 60% 38%;
+    --gold-light: 38 50% 93%;
+    --cream: 30 20% 97%;
+    --ink: 220 15% 10%;
+    --success: 152 55% 38%;
     --warning: 38 92% 50%;
 
-    /* Premium layered shadows */
+    /* Premium shadows */
     --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.04);
     --shadow-md: 0 2px 8px -2px rgb(0 0 0 / 0.06), 0 4px 16px -4px rgb(0 0 0 / 0.06);
     --shadow-lg: 0 4px 12px -2px rgb(0 0 0 / 0.06), 0 12px 32px -8px rgb(0 0 0 / 0.1);
-    --shadow-card: 0 1px 2px rgb(0 0 0 / 0.03), 0 2px 8px -2px rgb(0 0 0 / 0.04), 0 8px 24px -8px rgb(0 0 0 / 0.06);
-    --shadow-card-hover: 0 2px 4px rgb(0 0 0 / 0.04), 0 8px 16px -4px rgb(0 0 0 / 0.08), 0 16px 40px -12px rgb(0 0 0 / 0.1);
-    --shadow-float: 0 8px 30px -8px rgb(0 0 0 / 0.12), 0 20px 50px -16px rgb(0 0 0 / 0.08);
+    --shadow-card: 0 1px 2px rgb(0 0 0 / 0.03), 0 2px 8px -2px rgb(0 0 0 / 0.04);
+    --shadow-card-hover: 0 2px 4px rgb(0 0 0 / 0.04), 0 8px 16px -4px rgb(0 0 0 / 0.08);
+    --shadow-float: 0 1px 3px rgb(0 0 0 / 0.06), 0 4px 12px -4px rgb(0 0 0 / 0.08);
 
     /* Sidebar */
-    --sidebar-background: 42 20% 96%;
-    --sidebar-foreground: 210 15% 30%;
-    --sidebar-primary: 168 55% 28%;
-    --sidebar-primary-foreground: 48 30% 97%;
-    --sidebar-accent: 42 18% 91%;
-    --sidebar-accent-foreground: 210 15% 28%;
-    --sidebar-border: 42 15% 87%;
-    --sidebar-ring: 168 55% 28%;
+    --sidebar-background: 30 15% 96%;
+    --sidebar-foreground: 220 10% 30%;
+    --sidebar-primary: 174 40% 26%;
+    --sidebar-primary-foreground: 30 20% 97%;
+    --sidebar-accent: 30 12% 91%;
+    --sidebar-accent-foreground: 220 10% 28%;
+    --sidebar-border: 30 12% 88%;
+    --sidebar-ring: 174 40% 26%;
     --font-sans: 'Vazirmatn', system-ui, sans-serif;
-    --chart-1: 168 55% 28%;
-    --chart-2: 38 70% 52%;
-    --chart-3: 210 20% 60%;
+    --chart-1: 174 40% 26%;
+    --chart-2: 18 80% 55%;
+    --chart-3: 220 15% 60%;
     --chart-4: 152 40% 50%;
     --chart-5: 0 60% 55%;
-    --sidebar: 42 20% 96%;
+    --sidebar: 30 15% 96%;
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
     --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
