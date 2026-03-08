@@ -117,14 +117,20 @@ function NavItem({ to, active, children, label }: { to: string; active: boolean;
     <Link
       to={to}
       className={cn(
-        "flex items-center justify-center flex-1 h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded-md group transition-colors duration-200",
-        active ? "text-foreground" : "text-muted-foreground/50"
+        "flex items-center justify-center flex-1 h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded-md group transition-all duration-300",
+        active ? "text-foreground" : "text-muted-foreground/45"
       )}
       aria-label={label}
       aria-current={active ? "page" : undefined}
     >
-      <div className="relative flex items-center justify-center w-10 h-10 rounded-xl transition-colors duration-300 group-active:scale-90">
+      <div className={cn(
+        "relative flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300 group-active:scale-90",
+        active && "bg-primary/8"
+      )}>
         {children}
+        {active && (
+          <span className="absolute -bottom-1.5 w-1 h-1 rounded-full bg-primary" />
+        )}
       </div>
     </Link>
   );
