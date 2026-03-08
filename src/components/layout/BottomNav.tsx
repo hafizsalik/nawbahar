@@ -49,7 +49,7 @@ export function BottomNav() {
           <NavItem to="/explore" active={isActive("/explore")} label="جستجو">
             <Search
               size={21}
-              strokeWidth={isActive("/explore") ? 2.2 : 1.4}
+              strokeWidth={isActive("/explore") ? 1.8 : 1.4}
             />
           </NavItem>
 
