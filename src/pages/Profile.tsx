@@ -17,6 +17,7 @@ import defaultCover from "@/assets/default-cover.jpg";
 import type { ProfileArticle } from "@/hooks/useProfile";
 import { SEOHead } from "@/components/SEOHead";
 import { SuggestedWriters } from "@/components/profile/SuggestedWriters";
+import { ProfileReviews } from "@/components/profile/ProfileReviews";
 import { MessageCircle as WhatsApp, Facebook, Linkedin } from "lucide-react";
 
 const Profile = () => {
