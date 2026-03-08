@@ -93,7 +93,7 @@ export function ArticleCardMetrics({
               userReaction={userReaction}
               onReact={onReact}
               onHover={onReactionHover}
-              summaryText={reactionText}
+              summaryText={reactionText || undefined}
               onSummaryClick={hasReactions ? handleSummaryClick : undefined}
             />
           </div>
