@@ -37,6 +37,7 @@ export type Database = {
           parent_article_id: string | null
           read_count: number | null
           save_count: number | null
+          scheduled_at: string | null
           share_count: number | null
           status: Database["public"]["Enums"]["article_status"]
           tags: string[] | null
@@ -67,6 +68,7 @@ export type Database = {
           parent_article_id?: string | null
           read_count?: number | null
           save_count?: number | null
+          scheduled_at?: string | null
           share_count?: number | null
           status?: Database["public"]["Enums"]["article_status"]
           tags?: string[] | null
@@ -97,6 +99,7 @@ export type Database = {
           parent_article_id?: string | null
           read_count?: number | null
           save_count?: number | null
+          scheduled_at?: string | null
           share_count?: number | null
           status?: Database["public"]["Enums"]["article_status"]
           tags?: string[] | null
