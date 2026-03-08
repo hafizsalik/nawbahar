@@ -283,8 +283,6 @@ const Profile = () => {
           </TabsContent>
         </Tabs>
 
-        {/* Suggested Writers */}
-        {isOwnProfile && <SuggestedWriters />}
       </div>
 
       {/* Modals */}

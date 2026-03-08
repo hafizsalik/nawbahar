@@ -108,9 +108,6 @@ export function ArticleCard({ article, onDelete }: ArticleCardProps) {
             </button>
             <span className="text-muted-foreground/20 text-[10px]">·</span>
             <span className="text-[10.5px] text-muted-foreground/50 font-normal">{formatSolarShort(article.created_at)}</span>
-            <div onClick={(e) => { e.preventDefault(); e.stopPropagation(); }} className="flex-shrink-0">
-              <FollowButton userId={article.author_id} size="sm" />
-            </div>
           </div>
 
           <div onClick={(e) => e.preventDefault()} className="flex-shrink-0">
