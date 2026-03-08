@@ -18,6 +18,8 @@ function getNotificationIcon(type: string) {
       return <MessageCircle size={16} className="text-primary" fill="currentColor" />;
     case "follow":
       return <UserPlus size={16} className="text-foreground" />;
+    case "new_article":
+      return <Bell size={16} className="text-primary" />;
     default:
       return <Bell size={16} className="text-muted-foreground" />;
   }
