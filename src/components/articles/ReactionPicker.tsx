@@ -98,7 +98,7 @@ export function ReactionPicker({ userReaction, onReact, onHover, topTypes, summa
   };
 
   return (
-    <div ref={containerRef} className="relative flex items-center gap-1.5">
+    <div ref={containerRef} className="relative flex items-center gap-1 sm:gap-1.5">
       {/* Main emoji button */}
       <button onClick={handleToggle} className="flex items-center">
         {renderInlineEmoji()}
