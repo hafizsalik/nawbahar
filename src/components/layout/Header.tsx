@@ -11,39 +11,51 @@ export function Header() {
   return (
     <header 
       className={cn(
-        "fixed top-0 left-0 right-0 z-40 glass safe-top transition-transform duration-300",
-        "border-b-2 border-primary/20",
-        !isVisible && "-translate-y-full"
+        "fixed top-0 left-0 right-0 z-40 safe-top transition-all duration-400",
+        isVisible ? "translate-y-0" : "-translate-y-full"
       )}
     >
-      <div className="flex items-center justify-between px-5 h-12 max-w-lg mx-auto">
-        {/* Logo */}
-        <Link to="/" className="flex items-center group">
-          <span className="text-xl font-black tracking-tight text-primary transition-colors duration-200">
-            نوبهار
-          </span>
-          <span className="text-[8px] font-semibold text-primary/40 mr-1 mt-1.5 tracking-widest">BETA</span>
-        </Link>
+      {/* Frosted glass container */}
+      <div className="mx-3 mt-2">
+        <div className="glass rounded-2xl border border-border/40 float-element">
+          <div className="flex items-center justify-between px-5 h-12 max-w-lg mx-auto">
+            {/* Brand */}
+            <Link to="/" className="flex items-center gap-1.5 group">
+              {/* Logo mark */}
+              <div className="w-7 h-7 rounded-lg bg-primary flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <span className="text-sm font-black text-primary-foreground leading-none">ن</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-base font-black tracking-tight text-foreground leading-none">
+                  نوبهار
+                </span>
+                <span className="text-[7px] font-bold tracking-[0.2em] text-accent leading-none mt-0.5">
+                  NOBAHAR
+                </span>
+              </div>
+            </Link>
 
-        {/* Notifications */}
-        <Link to="/notifications" className="relative p-2 -ml-2">
-          <button 
-            className={cn(
-              "p-1.5 transition-all duration-200 focus:outline-none rounded-full",
-              unreadCount > 0 
-                ? "text-primary hover:bg-primary/8" 
-                : "text-muted-foreground/60 hover:text-foreground hover:bg-muted/50"
-            )}
-            aria-label={`اعلانات ${unreadCount > 0 ? `(${unreadCount} خوانده نشده)` : ''}`}
-          >
-            <Bell size={18} strokeWidth={1.5} />
-          </button>
-          {unreadCount > 0 && (
-            <span className="absolute top-1 right-1 min-w-[16px] h-[16px] flex items-center justify-center text-[10px] font-bold text-primary-foreground bg-primary rounded-full px-1 animate-scale-in shadow-sm">
-              {unreadCount > 9 ? "۹+" : unreadCount}
-            </span>
-          )}
-        </Link>
+            {/* Notifications */}
+            <Link to="/notifications" className="relative">
+              <button 
+                className={cn(
+                  "w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200",
+                  unreadCount > 0 
+                    ? "bg-primary/10 text-primary hover:bg-primary/15" 
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
+                )}
+                aria-label={`اعلانات ${unreadCount > 0 ? `(${unreadCount} خوانده نشده)` : ''}`}
+              >
+                <Bell size={17} strokeWidth={1.8} />
+              </button>
+              {unreadCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] flex items-center justify-center text-[9px] font-bold text-primary-foreground bg-accent rounded-full px-1 animate-scale-in ring-2 ring-card">
+                  {unreadCount > 9 ? "۹+" : unreadCount}
+                </span>
+              )}
+            </Link>
+          </div>
+        </div>
       </div>
     </header>
   );

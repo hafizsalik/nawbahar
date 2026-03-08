@@ -57,14 +57,17 @@ export function ArticleCard({ article, onDelete }: ArticleCardProps) {
   const formatCount = (count: number) => count > 0 ? count : null;
 
   return (
-    <article className="bg-card rounded-2xl border border-border/60 overflow-hidden card-elevated accent-bar">
+    <article className="group bg-card rounded-2xl border border-border/50 overflow-hidden card-elevated relative">
+      {/* Decorative accent — thin gold line on right */}
+      <div className="absolute top-4 bottom-4 right-0 w-[2px] bg-gradient-to-b from-accent/0 via-accent/50 to-accent/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-full" />
+
       {/* Response indicator */}
       {parentArticle && (
         <Link 
           to={`/article/${parentArticle.id}`}
-          className="flex items-center gap-1.5 px-5 pt-3 text-[11px] text-muted-foreground hover:text-primary transition-colors"
+          className="flex items-center gap-1.5 px-5 pt-3.5 text-[11px] text-muted-foreground hover:text-accent transition-colors"
         >
-          <CornerUpRight size={12} strokeWidth={1.5} />
+          <CornerUpRight size={12} strokeWidth={1.5} className="text-accent/70" />
           <span>پاسخ به: {parentArticle.title.slice(0, 40)}{parentArticle.title.length > 40 ? '...' : ''}</span>
         </Link>
       )}
@@ -72,32 +75,32 @@ export function ArticleCard({ article, onDelete }: ArticleCardProps) {
       {/* Main Content Area */}
       <Link to={`/article/${article.id}`} className="block">
         {/* Author Row */}
-        <div className="px-5 pt-4 pb-2 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
+        <div className="px-5 pt-4 pb-2.5 flex items-center justify-between">
+          <div className="flex items-center gap-3">
             <button 
               onClick={handleAuthorClick} 
-              className="flex items-center gap-2.5 group"
+              className="flex items-center gap-3 group/author"
               aria-label={`پروفایل ${article.author?.display_name}`}
             >
               {article.author?.avatar_url ? (
                 <img
                   src={article.author.avatar_url}
                   alt=""
-                  className="w-8 h-8 rounded-full object-cover ring-2 ring-background shadow-sm group-hover:ring-primary/20 transition-all"
+                  className="w-9 h-9 rounded-xl object-cover ring-1 ring-border group-hover/author:ring-primary/30 transition-all duration-300"
                   loading="lazy"
                 />
               ) : (
-                <div className="w-8 h-8 rounded-full bg-primary/8 flex items-center justify-center ring-2 ring-background shadow-sm group-hover:bg-primary/15 transition-colors">
-                  <span className="text-primary text-xs font-bold">
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center ring-1 ring-border group-hover/author:ring-primary/30 transition-all duration-300">
+                  <span className="text-primary text-sm font-bold">
                     {article.author?.display_name?.charAt(0)}
                   </span>
                 </div>
               )}
               <div className="flex flex-col">
-                <span className="text-[13px] text-foreground group-hover:text-primary transition-colors font-semibold leading-tight">
+                <span className="text-[13px] text-foreground group-hover/author:text-primary transition-colors font-semibold leading-tight">
                   {article.author?.display_name}
                 </span>
-                <span className="text-[11px] text-muted-foreground leading-tight">
+                <span className="text-[11px] text-muted-foreground/70 leading-tight mt-0.5">
                   {getRelativeTime(article.created_at)}
                 </span>
               </div>
@@ -112,7 +115,7 @@ export function ArticleCard({ article, onDelete }: ArticleCardProps) {
           </div>
         </div>
 
-        {/* Title - centered, prominent */}
+        {/* Title */}
         <div className="px-5 pb-2">
           <h3 className="text-[15px] font-bold text-foreground leading-8 line-clamp-2 text-center">
             {article.title}
@@ -121,8 +124,8 @@ export function ArticleCard({ article, onDelete }: ArticleCardProps) {
 
         {/* Cover Image */}
         {article.cover_image_url && (
-          <div className="px-5 pb-3">
-            <div className="aspect-[2.2/1] overflow-hidden bg-muted/50 rounded-xl relative">
+          <div className="px-4 pb-3">
+            <div className="aspect-[2.2/1] overflow-hidden bg-muted/30 rounded-xl relative">
               {!imageLoaded && (
                 <div className="absolute inset-0 skeleton" />
               )}
@@ -130,13 +133,15 @@ export function ArticleCard({ article, onDelete }: ArticleCardProps) {
                 src={article.cover_image_url}
                 alt=""
                 className={cn(
-                  "w-full h-full object-cover transition-all duration-500",
+                  "w-full h-full object-cover transition-all duration-700",
                   imageLoaded ? "opacity-100 scale-100" : "opacity-0 scale-105"
                 )}
                 loading="lazy"
                 decoding="async"
                 onLoad={() => setImageLoaded(true)}
               />
+              {/* Subtle vignette */}
+              <div className="absolute inset-0 bg-gradient-to-t from-card/10 to-transparent pointer-events-none" />
             </div>
           </div>
         )}
@@ -149,35 +154,35 @@ export function ArticleCard({ article, onDelete }: ArticleCardProps) {
         </div>
       </Link>
 
-      {/* Bottom Interaction Bar */}
-      <div className="border-t border-border/40 px-5 py-2.5 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          {/* Read time pill */}
-          <span className="inline-flex items-center gap-1 text-[10px] text-muted-foreground bg-secondary px-2.5 py-1 rounded-full font-medium">
-            <Clock size={10} strokeWidth={2} />
+      {/* Bottom Bar — refined */}
+      <div className="border-t border-border/30 px-5 py-2.5 flex items-center justify-between bg-muted/20">
+        <div className="flex items-center gap-3">
+          {/* Read time */}
+          <span className="inline-flex items-center gap-1 text-[10px] text-muted-foreground/80 bg-secondary/80 px-2.5 py-1 rounded-lg font-medium">
+            <Clock size={10} strokeWidth={2} className="text-accent/70" />
             {calculateReadTime(article.content)}
           </span>
           
-          <div className="flex items-center gap-1 text-muted-foreground/60 hover:text-muted-foreground transition-colors rounded-md px-1.5 py-1 hover:bg-muted/50">
-            <Eye size={13} strokeWidth={1.5} />
+          <div className="flex items-center gap-1 text-muted-foreground/50 hover:text-muted-foreground transition-colors rounded-lg px-1.5 py-1 hover:bg-muted/50">
+            <Eye size={12} strokeWidth={1.5} />
             {formatCount(viewCount) && (
               <span className="text-[10px]">{viewCount}</span>
             )}
           </div>
         </div>
 
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-0.5">
           <button 
             onClick={handleCommentClick}
             className={cn(
-              "flex items-center gap-1 transition-all duration-200 rounded-md px-2 py-1",
+              "flex items-center gap-1 transition-all duration-200 rounded-lg px-2 py-1",
               showComments 
                 ? "text-primary bg-primary/8" 
-                : "text-muted-foreground/60 hover:text-muted-foreground hover:bg-muted/50"
+                : "text-muted-foreground/50 hover:text-muted-foreground hover:bg-muted/50"
             )}
             aria-label={`${comments.length} نظر`}
           >
-            <MessageCircle size={13} strokeWidth={1.5} />
+            <MessageCircle size={12} strokeWidth={1.5} />
             {formatCount(comments.length) && (
               <span className="text-[10px] font-medium">{comments.length}</span>
             )}
@@ -185,10 +190,10 @@ export function ArticleCard({ article, onDelete }: ArticleCardProps) {
           
           <button 
             onClick={handleResponseClick}
-            className="flex items-center gap-1 text-muted-foreground/60 hover:text-muted-foreground hover:bg-muted/50 transition-all duration-200 rounded-md px-2 py-1"
+            className="flex items-center gap-1 text-muted-foreground/50 hover:text-muted-foreground hover:bg-muted/50 transition-all duration-200 rounded-lg px-2 py-1"
             aria-label={`${responseCount} پاسخ`}
           >
-            <CornerDownLeft size={13} strokeWidth={1.5} />
+            <CornerDownLeft size={12} strokeWidth={1.5} />
             {formatCount(responseCount) && (
               <span className="text-[10px] font-medium">{responseCount}</span>
             )}
@@ -196,21 +201,21 @@ export function ArticleCard({ article, onDelete }: ArticleCardProps) {
         </div>
       </div>
 
-      {/* Latest Comment Teaser - abstracted, outside main card feel */}
+      {/* Latest Comment Teaser */}
       {latestComment && !showComments && (
         <div 
-          className="bg-muted/40 border-t border-border/30 px-5 py-2.5 cursor-pointer hover:bg-muted/60 transition-colors"
+          className="bg-muted/30 border-t border-border/20 px-5 py-2.5 cursor-pointer hover:bg-muted/50 transition-colors"
           onClick={handleCommentClick}
         >
           <p className="text-[12px] text-muted-foreground leading-5 line-clamp-1">
             <span className="font-semibold text-foreground/70">{latestComment.author_name}</span>
-            <span className="mx-1.5 text-border">|</span>
-            <span className="text-muted-foreground/80">{latestComment.content}</span>
+            <span className="mx-1.5 text-accent/40">·</span>
+            <span className="text-muted-foreground/70">{latestComment.content}</span>
           </p>
         </div>
       )}
 
-      {/* Slide-down Comments */}
+      {/* Comments */}
       {showComments && (
         <div className="border-t border-border/30">
           <SlideDownComments
