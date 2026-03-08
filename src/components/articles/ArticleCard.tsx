@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { MessageSquareText, BarChart3, CornerUpRight, CornerDownLeft } from "lucide-react";
+import { useState, useMemo } from "react";
+import { MessageSquare, Eye, CornerUpRight, CornerDownLeft, Check } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import type { FeedArticle } from "@/hooks/useArticles";
 import { useComments } from "@/hooks/useComments";
@@ -25,6 +25,15 @@ function getExcerpt(content: string, maxChars: number = 110): string {
   return content.slice(0, maxChars).trim() + "…";
 }
 
+function isArticleRead(articleId: string): boolean {
+  try {
+    const key = `article_viewed_${articleId}`;
+    return localStorage.getItem(key) !== null;
+  } catch {
+    return false;
+  }
+}
+
 export function ArticleCard({ article, onDelete }: ArticleCardProps) {
   const navigate = useNavigate();
   const { comments, loading: commentsLoading, userId, addComment, deleteComment, refetch: refetchComments, submitting } = useComments(article.id);
@@ -34,6 +43,7 @@ export function ArticleCard({ article, onDelete }: ArticleCardProps) {
   
   const viewCount = (article as any).view_count || 0;
   const hasCover = !!article.cover_image_url;
+  const hasBeenRead = useMemo(() => isArticleRead(article.id), [article.id]);
 
   const handleAuthorClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -55,61 +65,8 @@ export function ArticleCard({ article, onDelete }: ArticleCardProps) {
 
   const formatCount = (count: number) => count > 0 ? count : null;
 
-  // Shared author row
-  const authorRow = (
-    <button onClick={handleAuthorClick} className="flex items-center gap-1.5 group/author min-w-0">
-      {article.author?.avatar_url ? (
-        <img src={article.author.avatar_url} alt="" className="w-5 h-5 rounded-full object-cover flex-shrink-0" loading="lazy" />
-      ) : (
-        <div className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-          <span className="text-primary text-[8px] font-bold">{article.author?.display_name?.charAt(0)}</span>
-        </div>
-      )}
-      <span className="text-[11px] text-foreground/60 group-hover/author:text-primary transition-colors font-medium truncate max-w-[80px]">
-        {article.author?.display_name}
-      </span>
-      <span className="text-muted-foreground/25 text-[9px]">·</span>
-      <span className="text-[10px] text-muted-foreground/40">{getRelativeTime(article.created_at)}</span>
-    </button>
-  );
-
-  // Shared actions row
-  const actionsRow = (
-    <div className="flex items-center gap-2.5">
-      {formatCount(viewCount) && (
-        <span className="flex items-center gap-1 text-muted-foreground/30 text-[11px]">
-          <BarChart3 size={12} strokeWidth={1.5} />
-          {viewCount}
-        </span>
-      )}
-      {formatCount(responseCount) && (
-        <button 
-          onClick={handleResponseClick}
-          className="flex items-center gap-1 text-muted-foreground/30 hover:text-muted-foreground transition-colors text-[11px]"
-        >
-          <CornerDownLeft size={12} strokeWidth={1.5} />
-          <span>{responseCount}</span>
-        </button>
-      )}
-      {(formatCount(comments.length) || true) && (
-        <button 
-          onClick={handleCommentClick}
-          className={cn(
-            "flex items-center gap-1 transition-colors text-[11px]",
-            showComments 
-              ? "text-primary" 
-              : "text-muted-foreground/30 hover:text-muted-foreground"
-          )}
-        >
-          <MessageSquareText size={12} strokeWidth={1.5} />
-          {formatCount(comments.length) && <span>{comments.length}</span>}
-        </button>
-      )}
-    </div>
-  );
-
   return (
-    <article className="group">
+    <article className={cn("group", hasBeenRead && "opacity-[0.65]")}>
       {/* Response indicator */}
       {parentArticle && (
         <Link 
@@ -123,8 +80,19 @@ export function ArticleCard({ article, onDelete }: ArticleCardProps) {
 
       <Link to={`/article/${article.id}`} className="block px-5 pt-5 pb-1">
         {/* Author + menu row */}
-        <div className="flex items-center justify-between mb-2.5">
-          {authorRow}
+        <div className="flex items-center justify-between mb-2">
+          <button onClick={handleAuthorClick} className="flex items-center gap-1.5 group/author min-w-0">
+            {article.author?.avatar_url ? (
+              <img src={article.author.avatar_url} alt="" className="w-5 h-5 rounded-full object-cover flex-shrink-0" loading="lazy" />
+            ) : (
+              <div className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <span className="text-primary text-[8px] font-bold">{article.author?.display_name?.charAt(0)}</span>
+              </div>
+            )}
+            <span className="text-[11px] text-foreground/60 group-hover/author:text-primary transition-colors font-medium truncate max-w-[80px]">
+              {article.author?.display_name}
+            </span>
+          </button>
           <div onClick={(e) => e.preventDefault()} className="flex-shrink-0">
             <ArticleActionsMenu
               articleId={article.id}
@@ -136,7 +104,6 @@ export function ArticleCard({ article, onDelete }: ArticleCardProps) {
 
         {hasCover ? (
           <div className="flex gap-4">
-            {/* Text — hero */}
             <div className="flex-1 min-w-0">
               <h3 className="text-[16px] font-extrabold text-foreground leading-[1.75] line-clamp-3">
                 {article.title}
@@ -145,8 +112,6 @@ export function ArticleCard({ article, onDelete }: ArticleCardProps) {
                 {getExcerpt(article.content, 150)}
               </p>
             </div>
-            
-            {/* Thumbnail — landscape like Medium */}
             <div className="w-[112px] h-[75px] flex-shrink-0 rounded overflow-hidden relative bg-muted/15 self-start mt-1">
               {!imageLoaded && <div className="absolute inset-0 skeleton" />}
               <img
@@ -173,17 +138,59 @@ export function ArticleCard({ article, onDelete }: ArticleCardProps) {
           </div>
         )}
 
-        {/* Footer */}
-        <div className="flex items-center justify-between mt-3">
-          <div className="flex items-center gap-2">
-            {article.tags && article.tags.slice(0, 1).map((tag) => (
-              <span key={tag} className="bg-secondary/60 text-muted-foreground/50 px-2.5 py-0.5 rounded-full text-[11px]">
-                {tag}
-              </span>
-            ))}
-            <span className="text-[11px] text-muted-foreground/30">{calculateReadTime(article.content)}</span>
+        {/* Footer — Medium style */}
+        <div className="flex items-center justify-between mt-3.5">
+          {/* Left: date + tag + read time */}
+          <div className="flex items-center gap-1.5 text-[11.5px] text-muted-foreground/40">
+            <span>{getRelativeTime(article.created_at)}</span>
+            {article.tags && article.tags.length > 0 && (
+              <>
+                <span className="text-muted-foreground/20">·</span>
+                <span className="bg-secondary/60 text-muted-foreground/50 px-2 py-0.5 rounded-full text-[10.5px]">
+                  {article.tags[0]}
+                </span>
+              </>
+            )}
+            <span className="text-muted-foreground/20">·</span>
+            <span>{calculateReadTime(article.content)}</span>
+            {hasBeenRead && (
+              <>
+                <span className="text-muted-foreground/20">·</span>
+                <Check size={12} strokeWidth={2} className="text-primary/50" />
+              </>
+            )}
           </div>
-          {actionsRow}
+          
+          {/* Right: interaction icons */}
+          <div className="flex items-center gap-3">
+            {formatCount(viewCount) && (
+              <span className="flex items-center gap-1 text-muted-foreground/30 text-[11.5px]">
+                <Eye size={14} strokeWidth={1.5} />
+                <span>{viewCount}</span>
+              </span>
+            )}
+            {formatCount(responseCount) && (
+              <button 
+                onClick={handleResponseClick}
+                className="flex items-center gap-1 text-muted-foreground/30 hover:text-muted-foreground transition-colors text-[11.5px]"
+              >
+                <CornerDownLeft size={14} strokeWidth={1.5} />
+                <span>{responseCount}</span>
+              </button>
+            )}
+            <button 
+              onClick={handleCommentClick}
+              className={cn(
+                "flex items-center gap-1 transition-colors text-[11.5px]",
+                showComments 
+                  ? "text-primary" 
+                  : "text-muted-foreground/30 hover:text-muted-foreground"
+              )}
+            >
+              <MessageSquare size={14} strokeWidth={1.5} />
+              {formatCount(comments.length) && <span>{comments.length}</span>}
+            </button>
+          </div>
         </div>
       </Link>
 
