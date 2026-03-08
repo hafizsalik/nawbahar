@@ -106,8 +106,9 @@ export function ReactionPicker({ userReaction, onReact, onHover, topTypes, summa
         onClick={handleIconTap}
         className={cn(
           "flex items-center transition-all duration-200",
-          isReacted ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+          isReacted ? "" : "text-muted-foreground hover:text-foreground"
         )}
+        style={isReacted && userReaction ? { color: REACTION_COLORS[userReaction]?.text } : undefined}
       >
         {renderSmartIcon()}
       </button>
