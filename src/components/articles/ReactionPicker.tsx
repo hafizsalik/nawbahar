@@ -115,24 +115,24 @@ export function ReactionPicker({ userReaction, onReact, onHover, topTypes, summa
     }
     if (topTypes && topTypes.length > 0) {
       return (
-        <span className="flex items-center -space-x-1 transition-opacity duration-500">
+        <span className="flex items-center -space-x-1">
           {topTypes.slice(0, 2).map((type) => {
             const Icon = REACTION_ICONS[type] || ThumbsUp;
             const color = REACTION_COLORS[type]?.text;
             return (
               <Icon
                 key={type}
-                size={13}
-                strokeWidth={1.5}
-                className="transition-colors duration-500"
-                style={{ color: color || undefined, opacity: 0.5 }}
+                size={14}
+                strokeWidth={1.6}
+                style={{ color: color || undefined, opacity: 0.7 }}
               />
             );
           })}
         </span>
       );
     }
-    return <ThumbsUp size={14} strokeWidth={1.5} className="text-muted-foreground/50" />;
+    // Always show ThumbsUp as default - consistent from mount
+    return <ThumbsUp size={14} strokeWidth={1.5} className="text-muted-foreground/40" />;
   };
 
   return (
@@ -147,25 +147,16 @@ export function ReactionPicker({ userReaction, onReact, onHover, topTypes, summa
         {renderSmartIcon()}
       </button>
 
-      {summaryText && onSummaryClick ? (
-        <button
-          onClick={handleTextClick}
-          className={cn(
-            "text-[11px] truncate max-w-[150px] transition-colors duration-300",
-            isReacted ? "" : "text-muted-foreground"
-          )}
-          style={isReacted ? { color: activeColor } : undefined}
-        >
-          {summaryText}
-        </button>
-      ) : (
-        <button
-          onClick={handleReactionLabelClick}
-          className="text-[11px] text-muted-foreground hover:text-foreground transition-colors duration-200"
-        >
-          واکنش
-        </button>
-      )}
+      <button
+        onClick={summaryText && onSummaryClick ? handleTextClick : handleReactionLabelClick}
+        className={cn(
+          "text-[11px] truncate max-w-[150px] transition-colors duration-200",
+          isReacted ? "" : "text-muted-foreground hover:text-foreground"
+        )}
+        style={isReacted ? { color: activeColor } : undefined}
+      >
+        {summaryText || "واکنش"}
+      </button>
 
       {/* Picker tray — outline icons with muted colors */}
       {open && (
@@ -186,18 +177,18 @@ export function ReactionPicker({ userReaction, onReact, onHover, topTypes, summa
                 onClick={(e) => handleSelect(key as ReactionKey, e)}
                 className={cn(
                   "flex flex-col items-center justify-center rounded-full transition-all duration-150",
-                  "w-[48px] h-[48px] sm:w-[38px] sm:h-[38px]",
-                  "hover:scale-[1.15] hover:-translate-y-0.5 active:scale-95",
+                  "w-[52px] h-[52px] sm:w-[40px] sm:h-[40px]",
+                  "hover:scale-[1.18] hover:-translate-y-1 active:scale-95",
                 )}
                 style={{
-                  animation: `scale-in 0.18s ease-out ${i * 35}ms both`,
-                  backgroundColor: isActive ? colors?.bg : undefined,
-                  boxShadow: isActive ? `0 0 0 1.5px ${colors?.ring}` : undefined,
-                  color: isActive ? colors?.text : "hsl(var(--muted-foreground))",
+                  animation: `scale-in 0.2s ease-out ${i * 40}ms both`,
+                  backgroundColor: isActive ? colors?.bg : `${colors?.bg?.replace(/[\d.]+\)$/, '0.05)')}`,
+                  boxShadow: isActive ? `0 0 0 2px ${colors?.ring}` : undefined,
+                  color: isActive ? colors?.text : colors?.text,
                 }}
               >
-                <Icon size={20} strokeWidth={1.5} className="sm:w-[17px] sm:h-[17px]" />
-                <span className="text-[8px] sm:hidden mt-1 leading-none opacity-70">
+                <Icon size={22} strokeWidth={isActive ? 2 : 1.5} className="sm:w-[18px] sm:h-[18px]" style={{ opacity: isActive ? 1 : 0.65 }} />
+                <span className="text-[9px] sm:hidden mt-1 leading-none" style={{ opacity: isActive ? 0.9 : 0.6 }}>
                   {REACTION_LABELS[key]}
                 </span>
               </button>
