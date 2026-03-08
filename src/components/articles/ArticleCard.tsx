@@ -114,40 +114,8 @@ export function ArticleCard({ article, onDelete: _onDelete }: ArticleCardProps) 
           </div>
         </div>
 
-        {hasCover ? (
-          <div className="flex gap-4">
-            <div className="flex-1 min-w-0">
-              <h3
-                className={cn(
-                  "text-[16px] font-extrabold text-foreground leading-[1.75] line-clamp-3 transition-colors",
-                  hasBeenRead && "text-muted-foreground/65"
-                )}
-              >
-                {article.title}
-              </h3>
-              <p className="text-[13px] text-muted-foreground/40 leading-[1.8] line-clamp-3 mt-1.5">
-                {getExcerpt(article.content, 150)}
-              </p>
-            </div>
-            <div
-              className={cn(
-                "w-[112px] h-[75px] flex-shrink-0 rounded overflow-hidden relative bg-muted/15 self-start mt-1 transition-all duration-300",
-                hasBeenRead && "opacity-60 saturate-[0.45]"
-              )}
-            >
-              {!imageLoaded && <div className="absolute inset-0 skeleton" />}
-              <img
-                src={article.cover_image_url!}
-                alt=""
-                className={cn("w-full h-full object-cover transition-opacity duration-500", imageLoaded ? "opacity-100" : "opacity-0")}
-                loading="lazy"
-                decoding="async"
-                onLoad={() => setImageLoaded(true)}
-              />
-            </div>
-          </div>
-        ) : (
-          <div>
+        <div className="flex gap-4">
+          <div className="flex-1 min-w-0">
             <h3
               className={cn(
                 "text-[16px] font-extrabold text-foreground leading-[1.75] line-clamp-3 transition-colors",
@@ -156,9 +124,27 @@ export function ArticleCard({ article, onDelete: _onDelete }: ArticleCardProps) 
             >
               {article.title}
             </h3>
-            <p className="text-[13px] text-muted-foreground/40 leading-[1.8] line-clamp-3 mt-1.5">{getExcerpt(article.content, 200)}</p>
+            <p className="text-[13px] text-muted-foreground/40 leading-[1.8] line-clamp-3 mt-1.5">
+              {getExcerpt(article.content, 150)}
+            </p>
           </div>
-        )}
+          <div
+            className={cn(
+              "w-[112px] h-[75px] flex-shrink-0 rounded overflow-hidden relative bg-muted/15 self-start mt-1 transition-all duration-300",
+              hasBeenRead && "opacity-60 saturate-[0.45]"
+            )}
+          >
+            {!imageLoaded && <div className="absolute inset-0 skeleton" />}
+            <img
+              src={coverImage}
+              alt=""
+              className={cn("w-full h-full object-cover transition-opacity duration-500", imageLoaded ? "opacity-100" : "opacity-0")}
+              loading="lazy"
+              decoding="async"
+              onLoad={() => setImageLoaded(true)}
+            />
+          </div>
+        </div>
 
         <div className="flex items-center justify-between mt-3.5">
           <div className="flex items-center gap-2 text-[11px] text-muted-foreground/35">
