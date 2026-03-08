@@ -73,7 +73,6 @@ export default defineConfig(({ mode }) => ({
             description: "مشاهده اعلانات",
             url: "/notifications",
           },
-          },
         ],
         share_target: {
           action: "/write",
