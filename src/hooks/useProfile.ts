@@ -14,17 +14,19 @@ export interface Profile {
   created_at: string;
 }
 
-interface Article {
+export interface ProfileArticle {
   id: string;
   title: string;
+  content: string;
   cover_image_url: string | null;
   created_at: string;
+  view_count: number | null;
 }
 
 export function useProfile(userId: string | undefined) {
   const [profile, setProfile] = useState<Profile | null>(null);
-  const [articles, setArticles] = useState<Article[]>([]);
-  const [bookmarks, setBookmarks] = useState<Article[]>([]);
+  const [articles, setArticles] = useState<ProfileArticle[]>([]);
+  const [bookmarks, setBookmarks] = useState<ProfileArticle[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -40,7 +42,6 @@ export function useProfile(userId: string | undefined) {
     
     setLoading(true);
 
-    // Fetch profile, articles, and bookmarks in parallel
     const [profileResult, articlesResult, bookmarksResult] = await Promise.all([
       supabase
         .from("profiles")
@@ -49,7 +50,7 @@ export function useProfile(userId: string | undefined) {
         .maybeSingle(),
       supabase
         .from("articles")
-        .select("id, title, cover_image_url, created_at")
+        .select("id, title, content, cover_image_url, created_at, view_count")
         .eq("author_id", userId)
         .eq("status", "published")
         .order("created_at", { ascending: false }),
@@ -65,12 +66,11 @@ export function useProfile(userId: string | undefined) {
 
     setArticles(articlesResult.data || []);
 
-    // Fetch bookmarked articles
     const bookmarkIds = (bookmarksResult.data || []).map(b => b.article_id);
     if (bookmarkIds.length > 0) {
       const { data: bookmarkedArticles } = await supabase
         .from("articles")
-        .select("id, title, cover_image_url, created_at")
+        .select("id, title, content, cover_image_url, created_at, view_count")
         .in("id", bookmarkIds)
         .eq("status", "published")
         .order("created_at", { ascending: false });

@@ -12,9 +12,12 @@ import { useUserRole } from "@/hooks/useUserRole";
 import { useFollowStats } from "@/hooks/useFollowStats";
 import { EditProfileModal } from "@/components/profile/EditProfileModal";
 import { getRelativeTime } from "@/lib/relativeTime";
+import { formatSolarShort } from "@/lib/solarHijri";
 import { FollowersList } from "@/components/profile/FollowersList";
 import { FollowButton } from "@/components/FollowButton";
 import { cn, toPersianNumber } from "@/lib/utils";
+import defaultCover from "@/assets/default-cover.jpg";
+import type { ProfileArticle } from "@/hooks/useProfile";
 
 const Profile = () => {
   const { userId: paramUserId } = useParams();
@@ -242,28 +245,28 @@ const Profile = () => {
         )}
 
         {/* === Tabs === */}
-        <Tabs defaultValue="articles" className="w-full mt-2">
+        <Tabs defaultValue="articles" className="w-full mt-2" dir="rtl">
           <TabsList className={cn(
-            "w-full bg-transparent border-b border-border rounded-none h-auto p-0 sticky top-12 z-20 bg-background grid",
-            isOwnProfile ? "grid-cols-3" : "grid-cols-2"
+            "w-full bg-transparent border-b border-border rounded-none h-auto p-0 sticky top-12 z-20 bg-background flex",
+            isOwnProfile ? "" : ""
           )}>
             <TabsTrigger 
               value="articles" 
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-foreground data-[state=active]:bg-transparent data-[state=active]:shadow-none py-3 text-[13px] font-semibold text-muted-foreground data-[state=active]:text-foreground"
+              className="flex-1 rounded-none border-b-2 border-transparent data-[state=active]:border-foreground data-[state=active]:bg-transparent data-[state=active]:shadow-none py-3 text-[13px] font-semibold text-muted-foreground data-[state=active]:text-foreground"
             >
               مقالات
             </TabsTrigger>
             {isOwnProfile && (
               <TabsTrigger 
                 value="saved" 
-                className="rounded-none border-b-2 border-transparent data-[state=active]:border-foreground data-[state=active]:bg-transparent data-[state=active]:shadow-none py-3 text-[13px] font-semibold text-muted-foreground data-[state=active]:text-foreground"
+                className="flex-1 rounded-none border-b-2 border-transparent data-[state=active]:border-foreground data-[state=active]:bg-transparent data-[state=active]:shadow-none py-3 text-[13px] font-semibold text-muted-foreground data-[state=active]:text-foreground"
               >
                 ذخیره‌شده‌ها
               </TabsTrigger>
             )}
             <TabsTrigger 
               value="about" 
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-foreground data-[state=active]:bg-transparent data-[state=active]:shadow-none py-3 text-[13px] font-semibold text-muted-foreground data-[state=active]:text-foreground"
+              className="flex-1 rounded-none border-b-2 border-transparent data-[state=active]:border-foreground data-[state=active]:bg-transparent data-[state=active]:shadow-none py-3 text-[13px] font-semibold text-muted-foreground data-[state=active]:text-foreground"
             >
               درباره
             </TabsTrigger>
@@ -452,29 +455,47 @@ function ProfileArticleItem({
   article, 
   style 
 }: { 
-  article: { id: string; title: string; cover_image_url: string | null; created_at: string };
+  article: ProfileArticle;
   style?: React.CSSProperties;
 }) {
+  const coverImage = article.cover_image_url || defaultCover;
+  const excerpt = article.content.length > 80 
+    ? article.content.replace(/<[^>]*>/g, '').slice(0, 80).trim() + "…" 
+    : article.content.replace(/<[^>]*>/g, '');
+
   return (
     <Link
       to={`/article/${article.id}`}
-      className="flex gap-3.5 px-5 py-4 hover:bg-muted/20 transition-colors animate-slide-up border-b border-border/40"
+      className="block px-5 pt-4 pb-3 hover:bg-muted/20 transition-colors animate-slide-up border-b border-border/30"
       style={style}
     >
-      <div className="flex-1 min-w-0">
-        <h3 className="font-bold text-foreground text-[14px] line-clamp-2 leading-[1.7]">{article.title}</h3>
-        <p className="text-[11px] text-muted-foreground/50 mt-1.5">
-          {getRelativeTime(article.created_at)}
-        </p>
+      <div className="flex gap-3.5">
+        <div className="flex-1 min-w-0">
+          <h3 className="font-extrabold text-foreground text-[15px] line-clamp-2 leading-[1.75]">
+            {article.title}
+          </h3>
+          <p className="text-[12.5px] text-muted-foreground/40 leading-[1.7] line-clamp-2 mt-1">
+            {excerpt}
+          </p>
+        </div>
+        <div className="w-[88px] h-[60px] flex-shrink-0 rounded overflow-hidden bg-muted/15 self-start mt-0.5">
+          <img 
+            src={coverImage} 
+            alt="" 
+            className="w-full h-full object-cover"
+            loading="lazy"
+          />
+        </div>
       </div>
-      {article.cover_image_url && (
-        <img 
-          src={article.cover_image_url} 
-          alt="" 
-          className="w-[72px] h-[48px] rounded object-cover shrink-0 bg-muted self-center"
-          loading="lazy"
-        />
-      )}
+      <div className="flex items-center gap-3 mt-2 text-[11px] text-muted-foreground/45">
+        <span>{formatSolarShort(article.created_at)}</span>
+        {(article.view_count ?? 0) > 0 && (
+          <>
+            <span className="text-muted-foreground/20">·</span>
+            <span>{toPersianNumber(article.view_count ?? 0)} بازدید</span>
+          </>
+        )}
+      </div>
     </Link>
   );
 }
