@@ -106,12 +106,12 @@ export function ArticleCard({ article, onDelete }: ArticleCardProps) {
                   <span className="text-primary text-[8px] font-bold">{article.author?.display_name?.charAt(0)}</span>
                 </div>
               )}
-              <span className="text-[11.5px] text-foreground/55 group-hover/author:text-primary transition-colors font-medium truncate max-w-[80px]">
+              <span className="text-[11.5px] text-foreground/60 group-hover/author:text-primary transition-colors font-medium truncate max-w-[80px]">
                 {article.author?.display_name}
               </span>
             </button>
             <span className="text-muted-foreground/20 text-[10px]">·</span>
-            <span className="text-[10.5px] text-muted-foreground/40 font-normal">{formatSolarShort(article.created_at)}</span>
+            <span className="text-[10.5px] text-muted-foreground/50 font-normal">{formatSolarShort(article.created_at)}</span>
             <div onClick={(e) => { e.preventDefault(); e.stopPropagation(); }} className="flex-shrink-0">
               <FollowButton userId={article.author_id} size="sm" />
             </div>
@@ -132,7 +132,7 @@ export function ArticleCard({ article, onDelete }: ArticleCardProps) {
             >
               {article.title}
             </h3>
-            <p className="text-[13px] text-muted-foreground/40 leading-[1.8] line-clamp-3 mt-1.5">
+            <p className="text-[13px] text-muted-foreground/55 leading-[1.8] line-clamp-3 mt-1.5">
               {getExcerpt(article.content, 150)}
             </p>
           </div>
