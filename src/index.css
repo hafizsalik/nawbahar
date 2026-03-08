@@ -332,30 +332,30 @@ html.text-xl body { font-size: 20px; }
   }
 
   .animate-fade-in {
-    animation: fadeIn 0.4s ease-out forwards;
+    animation: fadeIn 0.4s ease-out both;
   }
   .animate-slide-up {
-    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
   .animate-slide-down {
-    animation: slideDown 0.3s ease-out forwards;
+    animation: slideDown 0.3s ease-out both;
   }
   .animate-scale-in {
-    animation: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
   }
   .animate-bounce-subtle {
-    animation: bounceSubtle 0.5s ease-out;
+    animation: bounceSubtle 0.4s ease-out;
   }
   .animate-glow {
     animation: glow 2s ease-in-out infinite alternate;
   }
 
   @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
   }
   @keyframes slideUp {
-    from { opacity: 0; transform: translateY(16px); }
+    from { opacity: 0; transform: translateY(24px); }
     to { opacity: 1; transform: translateY(0); }
   }
   @keyframes slideDown {
@@ -368,7 +368,8 @@ html.text-xl body { font-size: 20px; }
   }
   @keyframes bounceSubtle {
     0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.08); }
+    40% { transform: scale(1.15); }
+    70% { transform: scale(0.95); }
   }
   @keyframes glow {
     from { box-shadow: 0 0 8px hsl(var(--primary) / 0.2); }
