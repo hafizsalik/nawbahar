@@ -91,6 +91,7 @@ export function useArticleInteractions(articleId: string) {
       if (!error) {
         setIsLiked(true);
         setLikeCount((prev) => prev + 1);
+        playClickSound();
       }
     }
   };
