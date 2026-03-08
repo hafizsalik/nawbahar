@@ -16,6 +16,7 @@ import { ArticleActionsMenu } from "@/components/articles/ArticleActionsMenu";
 import { ArticleReactions } from "@/components/articles/ArticleReactions";
 import { ArticleBottomSignals } from "@/components/articles/ArticleBottomSignals";
 import { ResponseArticles } from "@/components/articles/ResponseArticles";
+import { RelatedArticles } from "@/components/articles/RelatedArticles";
 import { Button } from "@/components/ui/button";
 import { FollowButton } from "@/components/FollowButton";
 import { useToast } from "@/hooks/use-toast";
@@ -134,7 +135,7 @@ const Article = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header — matches main header style */}
+      {/* Header */}
       <header className="sticky top-0 z-50 bg-background border-b border-border">
         <div className="flex items-center justify-between px-4 h-11 max-w-screen-md mx-auto">
           <button onClick={() => navigate(-1)} className="p-2 -mr-2 text-muted-foreground hover:text-foreground transition-colors">
@@ -181,9 +182,12 @@ const Article = () => {
               )}
             </Link>
             <div>
-              <Link to={`/profile/${article.author_id}`} className="text-[13px] font-medium text-foreground hover:underline">
-                {article.author?.display_name}
-              </Link>
+              <div className="flex items-center gap-2">
+                <Link to={`/profile/${article.author_id}`} className="text-[13px] font-medium text-foreground hover:underline">
+                  {article.author?.display_name}
+                </Link>
+                {user?.id !== article.author_id && <FollowButton userId={article.author_id} />}
+              </div>
               <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground/50 mt-0.5">
                 <span>{formatSolarShort(article.created_at)}</span>
                 <span className="text-muted-foreground/20">·</span>
@@ -191,7 +195,6 @@ const Article = () => {
               </div>
             </div>
           </div>
-          {user?.id !== article.author_id && <FollowButton userId={article.author_id} />}
         </div>
 
         {/* Title */}
@@ -206,7 +209,7 @@ const Article = () => {
 
         {/* Content */}
         <article className="article-content">
-          <div className="text-foreground whitespace-pre-wrap">{article.content}</div>
+          <div className="text-foreground whitespace-pre-wrap leading-[2.2] text-[15px]">{article.content}</div>
         </article>
 
         {/* Tags */}
@@ -216,7 +219,7 @@ const Article = () => {
               <Link
                 key={tag}
                 to={`/explore?tag=${encodeURIComponent(tag)}`}
-                className="px-2.5 py-1 bg-muted text-muted-foreground rounded-full text-[11px] hover:bg-primary/10 hover:text-primary transition-colors"
+                className="px-2.5 py-1 bg-muted/50 text-muted-foreground/60 rounded-full text-[11px] hover:bg-primary/10 hover:text-primary transition-colors"
               >
                 #{tag}
               </Link>
@@ -233,9 +236,19 @@ const Article = () => {
         {/* Response Articles */}
         <ResponseArticles responses={responses} />
 
+        {/* Related Articles */}
+        <RelatedArticles articleId={article.id} tags={article.tags} authorId={article.author_id} />
+
         {/* Comments Section */}
-        <div id="comments" className="mt-8 pt-6 border-t border-border">
-          <CommentSection comments={comments} loading={commentsLoading} submitting={submitting} userId={userId} onAddComment={addComment} onDeleteComment={deleteComment} />
+        <div id="comments" className="mt-10 pt-8 border-t border-border/50">
+          <CommentSection
+            comments={comments}
+            loading={commentsLoading}
+            submitting={submitting}
+            userId={userId}
+            onAddComment={addComment}
+            onDeleteComment={deleteComment}
+          />
         </div>
       </main>
 
