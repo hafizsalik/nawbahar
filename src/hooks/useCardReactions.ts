@@ -85,7 +85,7 @@ export function useCardReactions(articleId: string) {
     let reactorNames: string[] = [];
 
     if (currentUserId && otherReactorIds.length > 0) {
-      // Get IDs the user follows — prioritize these names
+      // Get IDs the user follows — prioritize these names (uses own follows, allowed by RLS)
       const { data: followData } = await supabase
         .from("follows")
         .select("following_id")
