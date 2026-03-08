@@ -134,27 +134,26 @@ export function ArticleCard({ article, onDelete }: ArticleCardProps) {
         </div>
 
         {hasCover ? (
-          /* --- Card WITH image: text-first with thumbnail --- */
-          <div className="flex gap-3.5">
-            {/* Text side — dominant */}
-            <div className="flex-1 min-w-0 flex flex-col">
-              <h3 className="text-[15.5px] font-bold text-foreground leading-[1.85] line-clamp-2">
+          <div className="flex gap-4">
+            {/* Text — hero */}
+            <div className="flex-1 min-w-0">
+              <h3 className="text-[16px] font-extrabold text-foreground leading-[1.75] line-clamp-3">
                 {article.title}
               </h3>
-              <p className="text-[12px] text-muted-foreground/55 leading-[1.95] line-clamp-2 mt-1">
-                {getExcerpt(article.content, 130)}
+              <p className="text-[13px] text-muted-foreground/45 leading-[1.8] line-clamp-2 mt-1.5">
+                {getExcerpt(article.content, 100)}
               </p>
             </div>
             
-            {/* Thumbnail — small, rounded, muted */}
-            <div className="w-[72px] h-[72px] flex-shrink-0 rounded-lg overflow-hidden relative bg-muted/20 self-start mt-0.5">
-              {!imageLoaded && <div className="absolute inset-0 skeleton rounded-lg" />}
+            {/* Thumbnail — landscape like Medium */}
+            <div className="w-[112px] h-[75px] flex-shrink-0 rounded overflow-hidden relative bg-muted/15 self-start mt-1">
+              {!imageLoaded && <div className="absolute inset-0 skeleton" />}
               <img
                 src={article.cover_image_url!}
                 alt=""
                 className={cn(
-                  "w-full h-full object-cover transition-opacity duration-500 saturate-[0.75] brightness-[0.94] opacity-80",
-                  imageLoaded ? "opacity-80" : "opacity-0"
+                  "w-full h-full object-cover transition-opacity duration-500",
+                  imageLoaded ? "opacity-100" : "opacity-0"
                 )}
                 loading="lazy"
                 decoding="async"
@@ -163,29 +162,26 @@ export function ArticleCard({ article, onDelete }: ArticleCardProps) {
             </div>
           </div>
         ) : (
-          /* --- Card WITHOUT image: pure text --- */
           <div>
-            <h3 className="text-[15.5px] font-bold text-foreground leading-[1.85] line-clamp-2">
+            <h3 className="text-[16px] font-extrabold text-foreground leading-[1.75] line-clamp-3">
               {article.title}
             </h3>
-            <p className="text-[12px] text-muted-foreground/55 leading-[1.95] line-clamp-3 mt-1">
-              {getExcerpt(article.content, 180)}
+            <p className="text-[13px] text-muted-foreground/45 leading-[1.8] line-clamp-2 mt-1.5">
+              {getExcerpt(article.content, 150)}
             </p>
           </div>
         )}
 
-        {/* Tags + actions footer */}
+        {/* Footer */}
         <div className="flex items-center justify-between mt-3">
-          {/* Tags */}
-          <div className="flex items-center gap-1.5 flex-wrap min-w-0">
-            {article.tags && article.tags.slice(0, 2).map((tag) => (
-              <span key={tag} className="bg-secondary/70 text-muted-foreground/50 px-2 py-0.5 rounded-full text-[10px]">
+          <div className="flex items-center gap-2">
+            {article.tags && article.tags.slice(0, 1).map((tag) => (
+              <span key={tag} className="bg-secondary/60 text-muted-foreground/50 px-2.5 py-0.5 rounded-full text-[11px]">
                 {tag}
               </span>
             ))}
+            <span className="text-[11px] text-muted-foreground/30">{calculateReadTime(article.content)}</span>
           </div>
-          
-          {/* Actions */}
           {actionsRow}
         </div>
       </Link>
