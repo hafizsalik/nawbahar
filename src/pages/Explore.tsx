@@ -99,6 +99,11 @@ const Explore = () => {
 
   return (
     <AppLayout>
+      <SEOHead
+        title="کاوش"
+        description="جستجو و کاوش مقالات تخصصی نوبهار. موضوعات سیاست، فرهنگ، علم، جامعه، اقتصاد و سلامت."
+        ogUrl="/explore"
+      />
       <div className="animate-fade-in">
         {/* Search */}
         <div className="px-5 pt-4 pb-3">
