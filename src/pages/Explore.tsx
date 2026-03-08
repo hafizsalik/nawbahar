@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { AppLayout } from "@/components/layout/AppLayout";
-import { Search, TrendingUp, Hash, X, User, Info } from "lucide-react";
+import { Search, TrendingUp, Hash, X, User } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { ArticleCard } from "@/components/articles/ArticleCard";
 import { usePublishedArticles } from "@/hooks/useArticles";
