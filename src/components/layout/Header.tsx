@@ -1,12 +1,10 @@
-import { Bell } from "lucide-react";
+import { PenLine } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useScrollDirection } from "@/hooks/useScrollDirection";
 import { cn } from "@/lib/utils";
-import { useNotifications } from "@/hooks/useNotifications";
 
 export function Header() {
   const isVisible = useScrollDirection();
-  const { unreadCount } = useNotifications();
 
   return (
     <header 
@@ -15,7 +13,7 @@ export function Header() {
         isVisible ? "translate-y-0" : "-translate-y-full"
       )}
     >
-      <div className="bg-background/95 backdrop-blur-md border-b border-border/50">
+      <div className="bg-background border-b border-border/60">
         <div className="flex items-center justify-between px-5 h-12 max-w-lg mx-auto">
           {/* Brand */}
           <Link to="/" className="flex items-center gap-1.5 group">
@@ -32,24 +30,13 @@ export function Header() {
             </div>
           </Link>
 
-          {/* Notifications */}
-          <Link to="/notifications" className="relative">
-            <button 
-              className={cn(
-                "w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200",
-                unreadCount > 0 
-                  ? "text-accent" 
-                  : "text-muted-foreground/50 hover:text-foreground"
-              )}
-              aria-label={`اعلانات ${unreadCount > 0 ? `(${unreadCount} خوانده نشده)` : ''}`}
-            >
-              <Bell size={18} strokeWidth={1.6} fill={unreadCount > 0 ? "currentColor" : "none"} />
-            </button>
-            {unreadCount > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-[16px] flex items-center justify-center text-[8px] font-bold text-accent-foreground bg-accent rounded-full px-0.5 animate-scale-in ring-2 ring-background">
-                {unreadCount > 9 ? "۹+" : unreadCount}
-              </span>
-            )}
+          {/* Write CTA */}
+          <Link 
+            to="/write" 
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-primary text-primary-foreground text-xs font-bold hover:opacity-90 active:scale-95 transition-all duration-150"
+          >
+            <PenLine size={14} strokeWidth={2.2} />
+            <span>بنویسید</span>
           </Link>
         </div>
       </div>
