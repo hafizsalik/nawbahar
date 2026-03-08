@@ -57,7 +57,7 @@ export function ArticleCard({ article, onDelete }: ArticleCardProps) {
   const formatCount = (count: number) => count > 0 ? count : null;
 
   return (
-    <article className="bg-card rounded-2xl border border-border/60 overflow-hidden card-elevated">
+    <article className="bg-card rounded-2xl border border-border/60 overflow-hidden card-elevated accent-bar">
       {/* Response indicator */}
       {parentArticle && (
         <Link 

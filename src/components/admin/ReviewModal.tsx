@@ -105,13 +105,12 @@ export function ReviewModal({ article, onClose, onComplete }: ReviewModalProps) 
         ai_score_writing: aiScores.writing,
         ai_score_timing: aiScores.timing,
         ai_score_innovation: aiScores.innovation,
-        total_feed_rank: editorTotal,
         final_weight: finalWeight,
       })
       .eq("id", article.id);
 
     if (error) {
-      toast({ title: "خطا", description: "خطا در انتشار مقاله", variant: "destructive" });
+      toast({ title: "خطا", description: error.message || "خطا در انتشار مقاله", variant: "destructive" });
     } else {
       const reputationUpdated = await updateAuthorReputation(article.author_id);
       toast({
@@ -135,12 +134,11 @@ export function ReviewModal({ article, onClose, onComplete }: ReviewModalProps) 
         editorial_score_writing: scores.writing,
         editorial_score_timing: scores.timing,
         editorial_score_innovation: scores.innovation,
-        total_feed_rank: totalScore,
       })
       .eq("id", article.id);
 
     if (error) {
-      toast({ title: "خطا", description: "خطا در ذخیره امتیازات", variant: "destructive" });
+      toast({ title: "خطا", description: error.message || "خطا در ذخیره امتیازات", variant: "destructive" });
     } else {
       const reputationUpdated = await updateAuthorReputation(article.author_id);
       toast({

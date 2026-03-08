@@ -14,7 +14,7 @@ export function BottomNav() {
   const location = useLocation();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 glass border-t border-border/30 safe-bottom no-print">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 glass border-t-2 border-primary/15 safe-bottom no-print">
       <div className="flex items-center justify-around max-w-lg mx-auto h-14">
         {navItems.map(({ icon: Icon, path, label, isWrite }) => {
           const isActive = location.pathname === path || 
