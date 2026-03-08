@@ -118,7 +118,7 @@ function NavItem({ to, active, children, label }: { to: string; active: boolean;
       to={to}
       className={cn(
         "flex items-center justify-center flex-1 h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded-md group transition-colors duration-200",
-        active ? "text-foreground" : "text-muted-foreground/40"
+        active ? "text-foreground" : "text-muted-foreground/50"
       )}
       aria-label={label}
       aria-current={active ? "page" : undefined}
