@@ -83,21 +83,24 @@ const REACTION_ICON_MAP: Record<string, React.ElementType> = {
 };
 
 function getNotificationIcon(type: string, reactionType?: string) {
+  const s = 10;
+  const sw = 1.8;
+  const cls = "text-muted-foreground/60";
   if (type === "like" && reactionType) {
     const Icon = REACTION_ICON_MAP[reactionType] || ThumbsUp;
-    return <Icon size={15} strokeWidth={1.6} className="text-muted-foreground/60" />;
+    return <Icon size={s} strokeWidth={sw} className={cls} />;
   }
   switch (type) {
     case "like":
-      return <ThumbsUp size={15} strokeWidth={1.6} className="text-muted-foreground/60" />;
+      return <ThumbsUp size={s} strokeWidth={sw} className={cls} />;
     case "comment":
-      return <MessageCircle size={15} strokeWidth={1.6} className="text-muted-foreground/60" />;
+      return <MessageCircle size={s} strokeWidth={sw} className={cls} />;
     case "follow":
-      return <UserPlus size={15} strokeWidth={1.6} className="text-muted-foreground/60" />;
+      return <UserPlus size={s} strokeWidth={sw} className={cls} />;
     case "new_article":
-      return <Bell size={15} strokeWidth={1.6} className="text-muted-foreground/60" />;
+      return <Bell size={s} strokeWidth={sw} className={cls} />;
     default:
-      return <Bell size={15} strokeWidth={1.6} className="text-muted-foreground/40" />;
+      return <Bell size={s} strokeWidth={sw} className="text-muted-foreground/40" />;
   }
 }
 
