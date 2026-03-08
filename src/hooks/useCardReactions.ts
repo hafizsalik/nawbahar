@@ -4,26 +4,20 @@ import { supabase } from "@/integrations/supabase/client";
 export const REACTION_EMOJIS: Record<string, string> = {
   like: "👍",
   love: "❤️",
-  clap: "👏",
   insightful: "💡",
-  fire: "🔥",
 };
 
 export const REACTION_LABELS: Record<string, string> = {
   like: "پسند",
   love: "عالی",
-  clap: "تحسین",
   insightful: "آموزنده",
-  fire: "الهام‌بخش",
 };
 
-/** Branded color per reaction type (HSL values matching platform palette) */
+/** Muted, editorial-grade colors per reaction */
 export const REACTION_COLORS: Record<string, { bg: string; text: string; ring: string }> = {
-  like: { bg: "hsl(174 40% 26% / 0.1)", text: "hsl(174 40% 26%)", ring: "hsl(174 40% 26% / 0.25)" },
-  love: { bg: "hsl(0 65% 52% / 0.08)", text: "hsl(0 65% 52%)", ring: "hsl(0 65% 52% / 0.2)" },
-  clap: { bg: "hsl(38 75% 50% / 0.1)", text: "hsl(38 75% 42%)", ring: "hsl(38 75% 50% / 0.2)" },
-  insightful: { bg: "hsl(210 60% 50% / 0.08)", text: "hsl(210 60% 45%)", ring: "hsl(210 60% 50% / 0.2)" },
-  fire: { bg: "hsl(18 80% 55% / 0.1)", text: "hsl(18 80% 48%)", ring: "hsl(18 80% 55% / 0.2)" },
+  like: { bg: "hsl(174 30% 30% / 0.08)", text: "hsl(174 30% 30%)", ring: "hsl(174 30% 30% / 0.15)" },
+  love: { bg: "hsl(0 40% 48% / 0.07)", text: "hsl(0 40% 48%)", ring: "hsl(0 40% 48% / 0.12)" },
+  insightful: { bg: "hsl(210 35% 45% / 0.07)", text: "hsl(210 35% 45%)", ring: "hsl(210 35% 45% / 0.12)" },
 };
 
 export type ReactionKey = keyof typeof REACTION_EMOJIS;
