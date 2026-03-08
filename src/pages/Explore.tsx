@@ -248,6 +248,9 @@ const Explore = () => {
               ))}
             </div>
           </div>
+          <div className="mt-6 px-5">
+            <SuggestedWriters />
+          </div>
         )}
       </div>
     </AppLayout>
