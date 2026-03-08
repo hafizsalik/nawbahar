@@ -12,9 +12,12 @@ import { useUserRole } from "@/hooks/useUserRole";
 import { useFollowStats } from "@/hooks/useFollowStats";
 import { EditProfileModal } from "@/components/profile/EditProfileModal";
 import { getRelativeTime } from "@/lib/relativeTime";
+import { formatSolarShort } from "@/lib/solarHijri";
 import { FollowersList } from "@/components/profile/FollowersList";
 import { FollowButton } from "@/components/FollowButton";
 import { cn, toPersianNumber } from "@/lib/utils";
+import defaultCover from "@/assets/default-cover.jpg";
+import type { ProfileArticle } from "@/hooks/useProfile";
 
 const Profile = () => {
   const { userId: paramUserId } = useParams();
