@@ -57,7 +57,8 @@ export function BottomNav() {
           {/* Write - Center prominent */}
           <Link
             to="/write"
-            className="flex items-center justify-center flex-1 h-full focus:outline-none group"
+            className="flex items-center justify-center flex-1 h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded-md group"
+            aria-label="نوشتن مقاله"
           >
             <div className={cn(
               "w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200",
