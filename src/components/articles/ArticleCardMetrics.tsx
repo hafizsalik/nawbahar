@@ -59,7 +59,6 @@ export function ArticleCardMetrics({
               strokeWidth={0}
               fill="currentColor"
             />
-            />
             {commentCount > 0 && <span>{commentCount}</span>}
           </button>
 
