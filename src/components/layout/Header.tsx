@@ -11,7 +11,8 @@ export function Header() {
   return (
     <header 
       className={cn(
-        "fixed top-0 left-0 right-0 z-40 glass border-b border-border/30 safe-top transition-transform duration-300",
+        "fixed top-0 left-0 right-0 z-40 glass safe-top transition-transform duration-300",
+        "border-b-2 border-primary/20",
         !isVisible && "-translate-y-full"
       )}
     >

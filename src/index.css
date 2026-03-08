@@ -244,9 +244,9 @@ html.text-xl body { font-size: 20px; }
 
   /* Glass effects */
   .glass {
-    background: hsl(var(--card) / 0.7);
-    backdrop-filter: blur(16px) saturate(180%);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    background: hsl(var(--card) / 0.75);
+    backdrop-filter: blur(20px) saturate(200%);
+    -webkit-backdrop-filter: blur(20px) saturate(200%);
   }
 
   .glass-card {
@@ -256,11 +256,11 @@ html.text-xl body { font-size: 20px; }
   /* Card with editorial shadow */
   .card-elevated {
     box-shadow: var(--shadow-card);
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    transition: box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1), transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .card-elevated:hover {
     box-shadow: var(--shadow-card-hover);
-    transform: translateY(-2px);
+    transform: translateY(-3px);
   }
 
   /* Subtle shadow for elevated elements */
@@ -284,6 +284,26 @@ html.text-xl body { font-size: 20px; }
   /* Gradient text */
   .gradient-text {
     @apply bg-gradient-to-l from-primary to-accent bg-clip-text text-transparent;
+  }
+
+  /* Accent bar for cards */
+  .accent-bar {
+    position: relative;
+    overflow: hidden;
+  }
+  .accent-bar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 3px;
+    height: 100%;
+    background: linear-gradient(to bottom, hsl(var(--primary)), hsl(var(--primary) / 0.2));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .accent-bar:hover::before {
+    opacity: 1;
   }
 }
 

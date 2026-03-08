@@ -330,20 +330,23 @@ function EmptyState({ icon: Icon, text }: { icon: any; text: string }) {
 function StatCard({ icon: Icon, label, value, variant = "default" }: { icon: any; label: string; value: number; variant?: "default" | "warning" | "danger" }) {
   return (
     <div className={cn(
-      "bg-card border rounded-xl p-3.5 transition-colors",
-      variant === "warning" ? "border-warning/20 bg-warning/5" :
-      variant === "danger" ? "border-destructive/20 bg-destructive/5" :
-      "border-border/40"
+      "bg-card border rounded-xl p-4 transition-all duration-300 hover:shadow-md group",
+      variant === "warning" ? "border-warning/30 bg-gradient-to-br from-warning/5 to-warning/10" :
+      variant === "danger" ? "border-destructive/30 bg-gradient-to-br from-destructive/5 to-destructive/10" :
+      "border-border/40 hover:border-primary/20"
     )}>
-      <div className="flex items-center gap-1.5 mb-1.5">
-        <Icon size={14} className={cn(
-          variant === "warning" ? "text-warning" :
-          variant === "danger" ? "text-destructive" :
-          "text-primary"
-        )} />
-        <span className="text-[10px] text-muted-foreground">{label}</span>
+      <div className="flex items-center gap-2 mb-2">
+        <div className={cn(
+          "w-8 h-8 rounded-lg flex items-center justify-center transition-colors",
+          variant === "warning" ? "bg-warning/15 text-warning" :
+          variant === "danger" ? "bg-destructive/15 text-destructive" :
+          "bg-primary/10 text-primary group-hover:bg-primary/15"
+        )}>
+          <Icon size={16} />
+        </div>
+        <span className="text-[11px] text-muted-foreground font-medium">{label}</span>
       </div>
-      <p className="text-xl font-black text-foreground tabular-nums">{value.toLocaleString("fa-IR")}</p>
+      <p className="text-2xl font-black text-foreground tabular-nums">{value.toLocaleString("fa-IR")}</p>
     </div>
   );
 }
