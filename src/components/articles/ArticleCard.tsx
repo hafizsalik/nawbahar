@@ -82,21 +82,25 @@ export function ArticleCard({ article, onDelete }: ArticleCardProps) {
               }}
             >
               {/* Cover image */}
-              <div className="aspect-[2.4/1] relative bg-muted/30">
+              <div className="aspect-[2.2/1] relative bg-muted/30">
                 {!imageLoaded && <div className="absolute inset-0 skeleton" />}
                 <img
                   src={article.cover_image_url!}
                   alt=""
                   className={cn(
-                    "w-full h-full object-cover transition-opacity duration-500",
+                    "w-full h-full object-cover transition-opacity duration-500 saturate-[0.85] brightness-[0.97] contrast-[1.03]",
                     imageLoaded ? "opacity-100" : "opacity-0"
                   )}
                   loading="lazy"
                   decoding="async"
                   onLoad={() => setImageLoaded(true)}
                 />
+                {/* Warm editorial tint */}
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.06] via-transparent to-amber-900/[0.08] mix-blend-multiply" />
                 {/* Cinematic gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/20 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/15 to-black/[0.08]" />
+                {/* Soft vignette */}
+                <div className="absolute inset-0 shadow-[inset_0_0_60px_rgba(0,0,0,0.15)]" />
                 
                 {/* Three-dot menu — top left of image */}
                 <div className="absolute top-2 left-2 z-10" onClick={(e) => e.preventDefault()}>
