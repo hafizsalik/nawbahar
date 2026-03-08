@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { SlideDownComments } from "./SlideDownComments";
 import { formatSolarShort } from "@/lib/solarHijri";
 import { ArticleCardMetrics } from "./ArticleCardMetrics";
+import defaultCover from "@/assets/default-cover.jpg";
 
 interface ArticleCardProps {
   article: FeedArticle;
