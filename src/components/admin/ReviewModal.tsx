@@ -110,7 +110,7 @@ export function ReviewModal({ article, onClose, onComplete }: ReviewModalProps) 
       .eq("id", article.id);
 
     if (error) {
-      toast({ title: "خطا", description: "خطا در انتشار مقاله", variant: "destructive" });
+      toast({ title: "خطا", description: error.message || "خطا در انتشار مقاله", variant: "destructive" });
     } else {
       const reputationUpdated = await updateAuthorReputation(article.author_id);
       toast({
