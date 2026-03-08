@@ -26,8 +26,6 @@ export function ArticleCardMetrics({
   onResponseClick,
   reactionSummary,
   onReact,
-  commenterNames = [],
-  userHasCommented = false,
 }: ArticleCardMetricsProps) {
   const { topTypes, totalCount, reactorNames, userReaction } = reactionSummary;
 
@@ -43,20 +41,7 @@ export function ArticleCardMetrics({
     return text;
   };
 
-  const buildCommentText = () => {
-    if (commentCount === 0) return null;
-    const names = [...commenterNames];
-    if (userHasCommented) names.unshift("شما");
-    const displayNames = names.slice(0, 2);
-    const remaining = commentCount - displayNames.length;
-    if (displayNames.length === 0 && remaining > 0) return `${remaining} نظر`;
-    let text = displayNames.join(" و ");
-    if (remaining > 0) text += ` و ${remaining} نفر دیگر`;
-    return text;
-  };
-
   const reactorText = buildReactorText();
-  const commentText = buildCommentText();
 
   return (
     <div className="mt-3 pb-4">
