@@ -62,6 +62,7 @@ const Bookmarks = () => {
 
   return (
     <AppLayout>
+      <SEOHead title="ذخیره‌شده‌ها" description="مقالات ذخیره شده شما در نوبهار" ogUrl="/bookmarks" noIndex />
       <div className="animate-fade-in">
         {/* Header */}
         <div className="sticky top-11 z-30 bg-background border-b border-border px-5 py-3 flex items-center justify-between">
