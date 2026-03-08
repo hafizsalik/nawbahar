@@ -33,7 +33,7 @@ export function ArticleCardMetrics({
         {/* Left: icons (filled style) */}
         <div className="flex items-center gap-5">
           <span className="flex items-center gap-1 text-[11px] text-foreground/40">
-            <Eye size={15} strokeWidth={1.7} fill="currentColor" className="opacity-60" />
+            <Eye size={15} strokeWidth={0} fill="currentColor" />
             {viewCount > 0 && <span>{viewCount}</span>}
           </span>
 
@@ -56,9 +56,8 @@ export function ArticleCardMetrics({
           >
             <MessageCircle
               size={15}
-              strokeWidth={1.7}
+              strokeWidth={0}
               fill="currentColor"
-              className="opacity-60"
             />
             {commentCount > 0 && <span>{commentCount}</span>}
           </button>
@@ -67,7 +66,7 @@ export function ArticleCardMetrics({
             onClick={stop}
             className="text-foreground/40 hover:text-foreground/65 transition-colors"
           >
-            <ThumbsDown size={14} strokeWidth={1.7} fill="currentColor" className="opacity-60" />
+            <ThumbsDown size={14} strokeWidth={0} fill="currentColor" />
           </button>
 
           {isRead && (
