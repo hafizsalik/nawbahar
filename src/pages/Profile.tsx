@@ -131,14 +131,6 @@ const Profile = () => {
                   <span className="text-[11.5px] text-muted-foreground/55">
                     <span className="font-semibold text-foreground/80">{toPersianNumber(articles.length)}</span> مقاله
                   </span>
-                  {isOwnProfile && (
-                    <button
-                      onClick={() => setEditModalOpen(true)}
-                      className="text-[11px] text-muted-foreground/45 hover:text-foreground border border-border/40 rounded-md px-2.5 py-0.5 transition-colors mr-auto"
-                    >
-                      ویرایش پروفایل
-                    </button>
-                  )}
                   {!isOwnProfile && viewingUserId && (
                     <div className="mr-auto">
                       <FollowButton userId={viewingUserId} />
@@ -147,6 +139,18 @@ const Profile = () => {
                 </div>
               </div>
             </div>
+
+            {/* Edit button — own row */}
+            {isOwnProfile && (
+              <div className="mt-3 mr-[68px]">
+                <button
+                  onClick={() => setEditModalOpen(true)}
+                  className="text-[11px] text-muted-foreground/50 hover:text-foreground border border-border/40 rounded-md px-3 py-1 transition-colors"
+                >
+                  ویرایش پروفایل
+                </button>
+              </div>
+            )}
 
             {/* Social links — pill style */}
             {(profile.whatsapp_number || profile.facebook_url || profile.linkedin_url) && (
