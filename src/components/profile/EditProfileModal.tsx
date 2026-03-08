@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Camera, Phone, MessageCircle, Facebook, Linkedin } from "lucide-react";
 import { compressProfileImage } from "@/lib/imageCompression";
@@ -19,6 +20,7 @@ interface EditProfileModalProps {
   userId: string;
   currentDisplayName: string;
   currentSpecialty: string | null;
+  currentBio?: string | null;
   currentAvatarUrl: string | null;
   currentWhatsapp?: string | null;
   currentFacebook?: string | null;
@@ -32,6 +34,7 @@ export function EditProfileModal({
   userId,
   currentDisplayName,
   currentSpecialty,
+  currentBio,
   currentAvatarUrl,
   currentWhatsapp,
   currentFacebook,
@@ -42,6 +45,7 @@ export function EditProfileModal({
   const [loading, setLoading] = useState(false);
   const [displayName, setDisplayName] = useState(currentDisplayName);
   const [specialty, setSpecialty] = useState(currentSpecialty || "");
+  const [bio, setBio] = useState(currentBio || "");
   const [whatsapp, setWhatsapp] = useState(currentWhatsapp || "");
   const [facebook, setFacebook] = useState(currentFacebook || "");
   const [linkedin, setLinkedin] = useState(currentLinkedin || "");
@@ -115,6 +119,7 @@ export function EditProfileModal({
         .update({
           display_name: displayName.trim(),
           specialty: specialty.trim() || null,
+          bio: bio.trim() || null,
           avatar_url: avatarUrl,
           whatsapp_number: whatsapp.trim() || null,
           facebook_url: facebook.trim() || null,
@@ -204,6 +209,20 @@ export function EditProfileModal({
               placeholder="مثال: نویسنده، پژوهشگر"
               className="h-9"
             />
+          </div>
+
+          {/* Bio */}
+          <div className="space-y-1.5">
+            <Label htmlFor="bio" className="text-sm">درباره من</Label>
+            <Textarea
+              id="bio"
+              value={bio}
+              onChange={(e) => setBio(e.target.value)}
+              placeholder="معرفی کوتاه از خودتان..."
+              className="text-sm min-h-[70px] resize-none"
+              maxLength={500}
+            />
+            <p className="text-[10px] text-muted-foreground text-left" dir="ltr">{bio.length}/500</p>
           </div>
 
           {/* Social Links */}
