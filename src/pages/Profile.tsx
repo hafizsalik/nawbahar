@@ -245,28 +245,28 @@ const Profile = () => {
         )}
 
         {/* === Tabs === */}
-        <Tabs defaultValue="articles" className="w-full mt-2">
+        <Tabs defaultValue="articles" className="w-full mt-2" dir="rtl">
           <TabsList className={cn(
-            "w-full bg-transparent border-b border-border rounded-none h-auto p-0 sticky top-12 z-20 bg-background grid",
-            isOwnProfile ? "grid-cols-3" : "grid-cols-2"
+            "w-full bg-transparent border-b border-border rounded-none h-auto p-0 sticky top-12 z-20 bg-background flex",
+            isOwnProfile ? "" : ""
           )}>
             <TabsTrigger 
               value="articles" 
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-foreground data-[state=active]:bg-transparent data-[state=active]:shadow-none py-3 text-[13px] font-semibold text-muted-foreground data-[state=active]:text-foreground"
+              className="flex-1 rounded-none border-b-2 border-transparent data-[state=active]:border-foreground data-[state=active]:bg-transparent data-[state=active]:shadow-none py-3 text-[13px] font-semibold text-muted-foreground data-[state=active]:text-foreground"
             >
               مقالات
             </TabsTrigger>
             {isOwnProfile && (
               <TabsTrigger 
                 value="saved" 
-                className="rounded-none border-b-2 border-transparent data-[state=active]:border-foreground data-[state=active]:bg-transparent data-[state=active]:shadow-none py-3 text-[13px] font-semibold text-muted-foreground data-[state=active]:text-foreground"
+                className="flex-1 rounded-none border-b-2 border-transparent data-[state=active]:border-foreground data-[state=active]:bg-transparent data-[state=active]:shadow-none py-3 text-[13px] font-semibold text-muted-foreground data-[state=active]:text-foreground"
               >
                 ذخیره‌شده‌ها
               </TabsTrigger>
             )}
             <TabsTrigger 
               value="about" 
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-foreground data-[state=active]:bg-transparent data-[state=active]:shadow-none py-3 text-[13px] font-semibold text-muted-foreground data-[state=active]:text-foreground"
+              className="flex-1 rounded-none border-b-2 border-transparent data-[state=active]:border-foreground data-[state=active]:bg-transparent data-[state=active]:shadow-none py-3 text-[13px] font-semibold text-muted-foreground data-[state=active]:text-foreground"
             >
               درباره
             </TabsTrigger>
