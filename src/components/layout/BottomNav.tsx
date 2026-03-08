@@ -82,7 +82,8 @@ export function BottomNav() {
           {/* Profile */}
           <Link
             to="/profile"
-            className="flex items-center justify-center flex-1 h-full focus:outline-none group"
+            className="flex items-center justify-center flex-1 h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded-md group"
+            aria-label="پروفایل"
           >
             {avatarUrl ? (
               <img
