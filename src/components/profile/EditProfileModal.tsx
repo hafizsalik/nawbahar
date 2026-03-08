@@ -154,7 +154,7 @@ export function EditProfileModal({
     } catch (error: any) {
       toast({
         title: "خطا",
-        description: error.message || "مشکلی پیش آمد",
+        description: "مشکلی پیش آمد. لطفاً دوباره تلاش کنید",
         variant: "destructive",
       });
     } finally {

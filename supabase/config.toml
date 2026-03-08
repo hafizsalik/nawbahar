@@ -5,3 +5,9 @@ verify_jwt = false
 
 [functions.publish-scheduled-articles]
 verify_jwt = false
+
+[functions.ai-score-article]
+verify_jwt = false
+
+[functions.ai-proofread]
+verify_jwt = false

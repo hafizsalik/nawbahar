@@ -160,7 +160,7 @@ const Article = () => {
             url: "https://nawbahar.lovable.app",
           },
           mainEntityOfPage: `https://nawbahar.lovable.app/article/${article.id}`,
-          inLanguage: "fa-IR",
+          inLanguage: "fa-AF",
           wordCount: article.content.split(/\s+/).length,
           keywords: article.tags?.join(", "),
         }}
