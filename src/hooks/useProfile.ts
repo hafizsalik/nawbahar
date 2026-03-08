@@ -6,6 +6,7 @@ export interface Profile {
   display_name: string;
   avatar_url: string | null;
   specialty: string | null;
+  bio: string | null;
   reputation_score: number | null;
   trust_score: number | null;
   whatsapp_number: string | null;
