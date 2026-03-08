@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowRight, Send, ImagePlus, X, CornerUpRight, FileText, Bold, Italic, List, Quote, Hash, ShieldCheck, ShieldX, Loader2, Save, Clock, CalendarClock, Link2, Search } from "lucide-react";
+import { ArrowRight, Send, ImagePlus, X, CornerUpRight, FileText, Bold, Italic, List, Quote, Hash, ShieldCheck, ShieldX, Loader2, Save, CalendarClock, Link2, Search, ChevronUp } from "lucide-react";
 import { compressArticleImage } from "@/lib/imageCompression";
 import { sanitizeError, validation } from "@/lib/errorHandler";
 import { playSuccessSound } from "@/lib/sounds";
