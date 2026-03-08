@@ -14,7 +14,7 @@ import { CommentSection } from "@/components/articles/CommentSection";
 import { ArticleRatingModal } from "@/components/admin/ArticleRatingModal";
 import { ArticleActionsMenu } from "@/components/articles/ArticleActionsMenu";
 import { ArticleReactions } from "@/components/articles/ArticleReactions";
-
+import { SuggestedWriters } from "@/components/profile/SuggestedWriters";
 import { ResponseArticles } from "@/components/articles/ResponseArticles";
 import { RelatedArticles } from "@/components/articles/RelatedArticles";
 import { Button } from "@/components/ui/button";
