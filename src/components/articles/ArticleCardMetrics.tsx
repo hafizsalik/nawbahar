@@ -1,4 +1,4 @@
-import { Bookmark, MessageCircle, Share, MoreHorizontal, CheckCheck } from "lucide-react";
+import { MessageCircle, Hand, CheckCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ArticleCardMetricsProps {
@@ -19,15 +19,9 @@ export function ArticleCardMetrics({
   tag,
   onCommentClick,
 }: ArticleCardMetricsProps) {
-  const stop = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-  };
-
   return (
-    <div className="mt-4 pt-2">
+    <div className="mt-4 pb-5">
       <div className="flex items-center justify-between">
-        {/* Left actions */}
         <div className="flex items-center gap-5">
           <button
             onClick={onCommentClick}
@@ -43,10 +37,11 @@ export function ArticleCardMetrics({
           </button>
 
           <button
-            onClick={stop}
-            className="text-muted-foreground hover:text-foreground transition-colors"
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+            className="flex items-center gap-1.5 text-[12px] text-muted-foreground hover:text-accent transition-colors"
+            title="واکنش"
           >
-            <Share size={15} strokeWidth={1.5} />
+            <Hand size={15} strokeWidth={1.5} />
           </button>
 
           {isRead && (
@@ -54,26 +49,11 @@ export function ArticleCardMetrics({
           )}
         </div>
 
-        {/* Right actions */}
-        <div className="flex items-center gap-4">
-          {tag && (
-            <span className="text-muted-foreground/50 text-[10px]">
-              {tag}
-            </span>
-          )}
-          <button
-            onClick={stop}
-            className="text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <Bookmark size={16} strokeWidth={1.5} />
-          </button>
-          <button
-            onClick={stop}
-            className="text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <MoreHorizontal size={16} strokeWidth={1.5} />
-          </button>
-        </div>
+        {tag && (
+          <span className="text-muted-foreground/50 text-[10px]">
+            {tag}
+          </span>
+        )}
       </div>
     </div>
   );
