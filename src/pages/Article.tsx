@@ -269,14 +269,8 @@ const Article = () => {
           }}
         />
 
-        {/* Response Articles */}
-        <ResponseArticles responses={responses} />
-
-        {/* Related Articles */}
-        <RelatedArticles articleId={article.id} tags={article.tags} authorId={article.author_id} />
-
         {/* Comments Section */}
-        <div id="comments" className="mt-10 pt-8 border-t border-border/50">
+        <div id="comments" className="pt-2">
           <CommentSection
             comments={comments}
             loading={commentsLoading}
@@ -287,6 +281,17 @@ const Article = () => {
             responses={responses}
           />
         </div>
+
+        {/* Suggested Writers */}
+        <div className="mt-8">
+          <SuggestedWriters />
+        </div>
+
+        {/* Response Articles */}
+        <ResponseArticles responses={responses} />
+
+        {/* Related Articles */}
+        <RelatedArticles articleId={article.id} tags={article.tags} authorId={article.author_id} />
       </main>
 
       {/* Admin Rating Modal */}
