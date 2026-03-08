@@ -146,22 +146,20 @@ export function ArticleCard({ article, onDelete }: ArticleCardProps) {
               </p>
             </div>
             
-            {/* Thumbnail — complementary */}
-            <div className="w-[108px] h-[108px] flex-shrink-0 rounded-xl overflow-hidden relative bg-muted/20">
-              {!imageLoaded && <div className="absolute inset-0 skeleton rounded-xl" />}
+            {/* Thumbnail — small, rounded, muted */}
+            <div className="w-[72px] h-[72px] flex-shrink-0 rounded-lg overflow-hidden relative bg-muted/20 self-start mt-0.5">
+              {!imageLoaded && <div className="absolute inset-0 skeleton rounded-lg" />}
               <img
                 src={article.cover_image_url!}
                 alt=""
                 className={cn(
-                  "w-full h-full object-cover transition-opacity duration-500 saturate-[0.88] brightness-[0.98]",
-                  imageLoaded ? "opacity-100" : "opacity-0"
+                  "w-full h-full object-cover transition-opacity duration-500 saturate-[0.75] brightness-[0.94] opacity-80",
+                  imageLoaded ? "opacity-80" : "opacity-0"
                 )}
                 loading="lazy"
                 decoding="async"
                 onLoad={() => setImageLoaded(true)}
               />
-              {/* Subtle editorial tint */}
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.04] to-transparent mix-blend-multiply" />
             </div>
           </div>
         ) : (
