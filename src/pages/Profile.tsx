@@ -179,7 +179,7 @@ const Profile = () => {
                 onClick={() => setShowFollowing(true)}
                 className="text-center hover:opacity-70 transition-opacity"
               >
-                <span className="block text-[17px] font-bold text-foreground">{followingCount}</span>
+                <span className="block text-[17px] font-bold text-foreground">{toPersianNumber(followingCount)}</span>
                 <span className="text-[11px] text-muted-foreground">دنبال‌شده</span>
               </button>
             </div>
