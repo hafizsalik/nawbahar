@@ -12,7 +12,7 @@ interface ReactionPickerProps {
   fetched?: boolean;
 }
 
-export function ReactionPicker({ userReaction, onReact, onHover, topTypes, summaryText, onSummaryClick }: ReactionPickerProps) {
+export function ReactionPicker({ userReaction, onReact, onHover, topTypes, summaryText, onSummaryClick, fetched = true }: ReactionPickerProps) {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const [justReacted, setJustReacted] = useState(false);
