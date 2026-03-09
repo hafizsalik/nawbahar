@@ -37,6 +37,7 @@ export function BottomNav() {
     >
       <div className="bg-background border-t border-border/20 safe-bottom">
         <div className="h-[2px] bg-gradient-to-l from-primary/20 via-accent/30 to-primary/10 -mt-[2px]" />
+        <div className="flex items-center justify-around max-w-lg mx-auto h-14">
           {/* Home */}
           <NavItem to="/" active={isActive("/")} label="خانه">
             <Home
