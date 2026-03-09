@@ -158,6 +158,7 @@ export function ArticleCard({ article, onDelete }: ArticleCardProps) {
           onCommentClick={handleCommentClick}
           onResponseClick={handleResponseClick}
           reactionSummary={reactionSummary}
+          reactionFetched={reactionFetched}
           onReact={(type) => { toggleReaction(type); }}
           onReactionHover={ensureFetched}
         />
