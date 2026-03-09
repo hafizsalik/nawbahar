@@ -17,7 +17,7 @@ interface ArticleCardProps {
   onDelete?: () => void;
 }
 
-function getExcerpt(content: string, maxChars: number = 110): string {
+function getExcerpt(content: string, maxChars: number = 160): string {
   if (content.length <= maxChars) return content;
   return content.slice(0, maxChars).trim() + "…";
 }
