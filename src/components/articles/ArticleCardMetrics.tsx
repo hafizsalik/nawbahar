@@ -16,6 +16,7 @@ interface ArticleCardMetricsProps {
   onCommentClick: (e: React.MouseEvent) => void;
   onResponseClick: (e: React.MouseEvent) => void;
   reactionSummary: ReactionSummary;
+  reactionFetched?: boolean;
   onReact: (type: ReactionKey) => void;
   onReactionHover?: () => void;
 }
