@@ -33,7 +33,7 @@ function PageFallback() {
   );
 }
 
-const App = forwardRef<HTMLDivElement>(function App(_props, _ref) {
+function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
@@ -65,6 +65,6 @@ const App = forwardRef<HTMLDivElement>(function App(_props, _ref) {
       </TooltipProvider>
     </QueryClientProvider>
   );
-});
+}
 
 export default App;
