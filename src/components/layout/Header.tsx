@@ -5,6 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useUserRole } from "@/hooks/useUserRole";
 import { toPersianNumber, cn } from "@/lib/utils";
 import { useState, useEffect, useRef } from "react";
+import nawbaharLogo from "@/assets/nawbahar-logo.png";
 
 export function Header() {
   const { unreadCount } = useNotifications();
