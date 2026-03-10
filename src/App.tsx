@@ -23,7 +23,6 @@ const VIP = lazy(() => import("./pages/VIP"));
 const About = lazy(() => import("./pages/About"));
 const Install = lazy(() => import("./pages/Install"));
 const Contact = lazy(() => import("./pages/Contact"));
-const ProfileSetup = lazy(() => import("./pages/ProfileSetup"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 function PageFallback() {
@@ -59,7 +58,6 @@ const App = forwardRef<HTMLDivElement>(function App(_props, _ref) {
               <Route path="/about" element={<About />} />
               <Route path="/install" element={<Install />} />
               <Route path="/contact" element={<Contact />} />
-              <Route path="/profile-setup" element={<ProfileSetup />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
