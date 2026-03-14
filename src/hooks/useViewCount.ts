@@ -33,14 +33,6 @@ export function useViewCount(articleId: string) {
       fetchViewCount();
     }
   }, [articleId, fetchViewCount]);
-    const { data } = await supabase
-      .from("articles")
-      .select("view_count")
-      .eq("id", articleId)
-      .maybeSingle();
-
-    setViewCount(data?.view_count || 0);
-  };
 
   return { viewCount };
 }

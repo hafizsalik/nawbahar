@@ -136,9 +136,10 @@ const Article = () => {
 
     setArticle(fullArticle);
     setLoading(false);
+}, [id]);
 
-  // Refetch when coming back online
-  useEffect(() => {
+// Refetch when coming back online
+useEffect(() => {
     const handleOnline = () => {
       if (id) fetchArticle(id);
     };

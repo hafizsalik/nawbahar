@@ -62,6 +62,16 @@ export function Header() {
         </Link>
 
         <div className="flex items-center gap-0.5">
+          {!user && (
+            <Link 
+              to="/auth" 
+              className="flex items-center justify-center w-9 h-9 text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded-md"
+              aria-label="ورود"
+            >
+              <LogOut size={19} strokeWidth={1.5} className="rotate-180" />
+            </Link>
+          )}
+
           <Link 
             to="/notifications" 
             className="relative flex items-center justify-center w-9 h-9 text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded-md"

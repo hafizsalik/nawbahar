@@ -101,7 +101,7 @@ export function RelatedArticles({ articleId, tags, authorId }: RelatedArticlesPr
         reaction_count: reactionCounts.get(a.id) || 0,
       }))
     );
-  };
+  }, [articleId, tags, authorId]);
 
   useEffect(() => {
     fetchRelated();

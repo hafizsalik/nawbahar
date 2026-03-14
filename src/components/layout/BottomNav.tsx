@@ -79,7 +79,7 @@ export function BottomNav() {
 
           {/* Profile */}
           <Link
-            to="/profile"
+            to={avatarUrl ? "/profile" : "/auth"}
             className="flex items-center justify-center flex-1 h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded-md group"
             aria-label="پروفایل"
           >
@@ -91,7 +91,7 @@ export function BottomNav() {
                   "w-[22px] h-[22px] rounded-full object-cover transition-all duration-200",
                   isProfileActive
                     ? "ring-[1.5px] ring-foreground scale-110"
-                    : "opacity-45 group-active:opacity-70 group-active:scale-90"
+                    : "ring-1 ring-muted-foreground/20 group-active:ring-muted-foreground/40 group-active:scale-90"
                 )}
               />
             ) : (
