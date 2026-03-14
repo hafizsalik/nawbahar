@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 interface PublishingStats {
@@ -13,7 +13,11 @@ export function usePublishingCapacity() {
   const [canPublish, setCanPublish] = useState(true);
   const [loading, setLoading] = useState(true);
 
-  const fetchStats = useCallback(async () => {
+  useEffect(() => {
+    fetchStats();
+  }, []);
+
+  const fetchStats = async () => {
     try {
       setLoading(true);
       
@@ -43,16 +47,12 @@ export function usePublishingCapacity() {
     } finally {
       setLoading(false);
     }
-  }, []);
-
-  useEffect(() => {
-    fetchStats();
-  }, [fetchStats]);
+  };
 
   return {
-    stats,
-    canPublish,
-    loading,
-    refetch: fetchStats,
+    stats: null,
+    canPublish: true,
+    loading: false,
+    refetch: () => {},
   };
 }

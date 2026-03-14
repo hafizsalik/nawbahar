@@ -64,7 +64,7 @@ const Auth = () => {
       if (error) throw error;
       toast({ title: "خوش آمدید! 👋" });
       navigate("/");
-    } catch (error) {
+    } catch (error: any) {
       toast({ title: "خطا", description: sanitizeError(error), variant: "destructive" });
     } finally {
       setLoading(false);
@@ -97,20 +97,19 @@ const Auth = () => {
 
     setLoading(true);
     try {
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/profile-setup`,
           data: { display_name: displayName.trim() },
         },
       });
       if (error) throw error;
-      toast({
-        title: "ثبت‌نام موفق ✅",
-        description: "لینک تأیید به ایمیل شما ارسال شد. لطفاً ایمیل خود را بررسی کنید.",
-      });
-    } catch (error) {
+      if (data?.user) {
+        toast({ title: "خوش آمدید به نوبهار! 🌱" });
+        navigate("/profile-setup");
+      }
+    } catch (error: any) {
       toast({ title: "خطا", description: sanitizeError(error), variant: "destructive" });
     } finally {
       setLoading(false);

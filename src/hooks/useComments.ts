@@ -1,3 +1,5 @@
+import { useState, useEffect, useCallback } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { validation } from "@/lib/errorHandler";
 import { playSubmitSound } from "@/lib/sounds";
@@ -9,7 +11,6 @@ export interface Comment {
   user_id: string;
   parent_id?: string | null;
   image_url?: string | null;
-  like_count?: number | null;
   author?: {
     display_name: string;
     avatar_url: string | null;
@@ -39,14 +40,13 @@ export function useComments(articleId: string, options?: UseCommentsOptions) {
     // Subscribe to realtime updates
     const channel = supabase
       .channel(`comments-${articleId}`)
-      .on('postgres_changes', {
-        event: '*',
-        schema: 'public',
-        table: 'comments',
+      .on("postgres_changes", {
+        event: "*",
+        schema: "public",
+        table: "comments",
         filter: `article_id=eq.${articleId}`,
       }, (payload) => {
-        if (payload.eventType === 'INSERT') {
-          // Add new comment
+        if (payload.eventType === "INSERT") {
           const newComment = payload.new as any;
           setComments(prev => {
             const exists = prev.some(c => c.id === newComment.id);
@@ -58,10 +58,11 @@ export function useComments(articleId: string, options?: UseCommentsOptions) {
               user_id: newComment.user_id,
               parent_id: newComment.parent_id,
               image_url: newComment.image_url,
-              author: undefined, // Will be fetched if needed
+              like_count: newComment.like_count ?? 0,
+              author: undefined,
             }];
           });
-        } else if (payload.eventType === 'DELETE') {
+        } else if (payload.eventType === "DELETE") {
           setComments(prev => prev.filter(c => c.id !== payload.old.id));
         }
       })
@@ -77,7 +78,7 @@ export function useComments(articleId: string, options?: UseCommentsOptions) {
     setUserId(session?.user?.id || null);
   };
 
-  const fetchComments = useCallback(async () => {
+  const fetchComments = async () => {
     setLoading(true);
     
     const { data: commentsData, error } = await supabase
@@ -121,7 +122,7 @@ export function useComments(articleId: string, options?: UseCommentsOptions) {
     
     setComments(transformed);
     setLoading(false);
-  }, [articleId]);
+  };
 
   const addComment = async (content: string, parentId?: string, imageUrl?: string) => {
     if (!userId) {
@@ -145,13 +146,13 @@ export function useComments(articleId: string, options?: UseCommentsOptions) {
 
     setSubmitting(true);
 
-    const insertData = {
+    const insertData: any = {
       article_id: articleId,
       user_id: userId,
       content: content.trim(),
       parent_id: parentId || null,
-      image_url: imageUrl || null,
     };
+    if (imageUrl) insertData.image_url = imageUrl;
 
     const { error } = await supabase.from("comments").insert(insertData);
 
