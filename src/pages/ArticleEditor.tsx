@@ -820,6 +820,39 @@ const ArticleEditor = () => {
                 ) : (
                   <p className="text-xs text-destructive/80 mb-3 leading-relaxed">{aiResult?.rejection_reason}</p>
                 )}
+                {aiResult?.scores && (
+                  <div className="space-y-1.5 pt-2 border-t border-border/50">
+                    <p className="text-[10px] text-muted-foreground/50 mb-1.5">امتیازدهی:</p>
+                    {scoreLabels.map(({ key, label, max }) => {
+                      const score = aiResult.scores[key];
+                      const percent = (score / max) * 100;
+                      return (
+                        <div key={key} className="flex items-center gap-2">
+                          <span className="text-[10px] text-muted-foreground w-14 text-left">{label}</span>
+                          <div className="flex-1 h-1 bg-muted rounded-full overflow-hidden">
+                            <div
+                              className={`h-full rounded-full transition-all duration-500 ${
+                                percent >= 60 ? "bg-green-500" : percent >= 40 ? "bg-yellow-500" : "bg-destructive"
+                              }`}
+                              style={{ width: `${percent}%` }}
+                            />
+                          </div>
+                          <span className="text-[9px] text-muted-foreground/50 w-7 text-left">
+                            {toPersianNumber(score)}/{toPersianNumber(max)}
+                          </span>
+                        </div>
+                      );
+                    })}
+                    <div className="flex items-center justify-between pt-1.5 border-t border-border/30">
+                      <span className="text-[10px] font-medium text-foreground">میانگین</span>
+                      <span className={`text-[11px] font-bold ${
+                        (aiResult.avg_percent || 0) >= 60 ? "text-green-600" : (aiResult.avg_percent || 0) >= 40 ? "text-yellow-600" : "text-destructive"
+                      }`}>
+                        {toPersianNumber(aiResult.avg_percent || 0)}٪
+                      </span>
+                    </div>
+                  </div>
+                )}
               </div>
             </AlertDialogDescription>
           </AlertDialogHeader>

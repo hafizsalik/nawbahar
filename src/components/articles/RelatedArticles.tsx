@@ -29,7 +29,7 @@ export function RelatedArticles({ articleId, tags, authorId }: RelatedArticlesPr
 
   useEffect(() => {
     fetchRelated();
-  }, [articleId, tags, authorId]);
+  }, [articleId]);
 
   const fetchRelated = async () => {
     const { data } = await supabase

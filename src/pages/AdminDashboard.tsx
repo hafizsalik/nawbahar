@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -26,14 +26,6 @@ interface AdminArticle {
   profiles?: { display_name: string } | null;
 }
 
-interface AdminUser {
-  id: string;
-  display_name: string;
-  avatar_url: string | null;
-  created_at: string;
-  is_admin?: boolean;
-}
-
 interface DashboardStats {
   totalArticles: number;
   totalUsers: number;
@@ -50,11 +42,9 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState<AdminArticle | null>(null);
-  const [activeTab, setActiveTab] = useState<"stats" | "reports" | "users" | "pending" | "published" | "rejected">("stats");
+  const [activeTab, setActiveTab] = useState("stats");
   const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [reportedComments, setReportedComments] = useState<ReportedComment[]>([]);
-  const [users, setUsers] = useState<AdminUser[]>([]);
-  const [userSearch, setUserSearch] = useState("");
+  const [reportedComments, setReportedComments] = useState<any[]>([]);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -162,57 +152,12 @@ const AdminDashboard = () => {
     setLoading(false);
   };
 
-  const fetchUsers = useCallback(async () => {
-    setLoading(true);
-    const { data, error } = await supabase
-      .from("profiles")
-      .select("id, display_name, avatar_url, created_at")
-      .order("created_at", { ascending: false })
-      .limit(50);
-
-    if (error) {
-      toast({ title: "خطا", description: error.message, variant: "destructive" });
-      setLoading(false);
-      return;
-    }
-
-    const userIds = (data || []).map((u) => u.id);
-    const { data: rolesData } = await supabase
-      .from("user_roles")
-      .select("user_id")
-      .eq("role", "admin")
-      .in("user_id", userIds);
-
-    const adminSet = new Set((rolesData || []).map((r) => r.user_id));
-
-    setUsers((data || []).map((u) => ({
-      ...u,
-      is_admin: adminSet.has(u.id),
-    })));
-    setLoading(false);
-  }, [toast]);
-
-  const fetchReportedComments = useCallback(async () => {
-
+  const fetchReportedComments = async () => {
     setLoading(true);
     const { data } = await supabase.from("reported_comments").select("*, comments(id, content, user_id, article_id)").order("created_at", { ascending: false });
     setReportedComments(data || []);
     setLoading(false);
-  }, []);
-
-  useEffect(() => {
-    checkAdminAccess();
-  }, [checkAdminAccess]);
-
-  useEffect(() => {
-    if (isAdmin) {
-      if (activeTab === "stats") fetchStats();
-      else if (activeTab === "reports") fetchReportedComments();
-      else if (activeTab === "users") fetchUsers();
-      else fetchArticles(activeTab as "pending" | "published" | "rejected");
-    }
-  }, [isAdmin, activeTab, fetchStats, fetchReportedComments, fetchArticles, fetchUsers]);
-
+  };
 
   const handleDeleteComment = async (commentId: string) => {
     const { error } = await supabase.from("comments").delete().eq("id", commentId);
@@ -255,10 +200,9 @@ const AdminDashboard = () => {
 
       <main className="max-w-screen-md mx-auto p-4">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="w-full grid grid-cols-6 mb-4 h-auto bg-muted/30 rounded-xl p-1">
+          <TabsList className="w-full grid grid-cols-5 mb-4 h-auto bg-muted/30 rounded-xl p-1">
             {[
               { value: "stats", icon: TrendingUp, label: "آمار" },
-              { value: "users", icon: Users, label: "کاربران" },
               { value: "pending", icon: Clock, label: "انتظار", badge: stats?.pendingArticles },
               { value: "published", icon: CheckCircle, label: "منتشر" },
               { value: "rejected", icon: XCircle, label: "رد" },
@@ -288,53 +232,6 @@ const AdminDashboard = () => {
                 <StatCard icon={BarChart3} label="ذخیره‌ها" value={stats.totalBookmarks} />
                 <StatCard icon={Clock} label="در انتظار" value={stats.pendingArticles} variant={stats.pendingArticles > 0 ? "warning" : "default"} />
                 <StatCard icon={Flag} label="گزارش‌ها" value={stats.reportedComments} variant={stats.reportedComments > 0 ? "danger" : "default"} />
-              </div>
-            )}
-          </TabsContent>
-
-          <TabsContent value="users">
-            {loading ? (
-              <LoadingSpinner />
-            ) : (
-              <div className="space-y-4">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                  <input
-                    value={userSearch}
-                    onChange={(e) => setUserSearch(e.target.value)}
-                    placeholder="جستجوی کاربر..."
-                    className="w-full sm:w-64 px-3 py-2 bg-background border border-border/60 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-                  />
-                  <span className="text-[12px] text-muted-foreground">{users.length} کاربر</span>
-                </div>
-
-                {users.filter((u) => u.display_name?.toLowerCase().includes(userSearch.toLowerCase())).length === 0 ? (
-                  <EmptyState icon={Users} text={userSearch ? "کاربری پیدا نشد" : "کاربری وجود ندارد"} />
-                ) : (
-                  <div className="space-y-2">
-                    {users
-                      .filter((u) => u.display_name?.toLowerCase().includes(userSearch.toLowerCase()))
-                      .map((user) => (
-                        <div key={user.id} className="bg-card border border-border/50 rounded-xl p-3.5 flex items-center justify-between gap-3">
-                          <div className="flex items-center gap-3">
-                            {user.avatar_url ? (
-                              <img src={user.avatar_url} alt={user.display_name} className="w-9 h-9 rounded-full object-cover" />
-                            ) : (
-                              <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
-                                <span className="text-primary font-bold text-sm">{user.display_name?.charAt(0)}</span>
-                              </div>
-                            )}
-                            <div>
-                              <div className="text-sm font-medium text-foreground">{user.display_name}</div>
-                              <div className="text-[11px] text-muted-foreground">
-                                {formatSolarShort(user.created_at)}
-                                {user.is_admin ? " · ادمین" : ""}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                  </div>
-                )}
               </div>
             )}
           </TabsContent>

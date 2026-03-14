@@ -10,10 +10,9 @@ interface ReactionPickerProps {
   topTypes?: ReactionKey[];
   summaryText?: string;
   onSummaryClick?: (e: React.MouseEvent) => void;
-  loading?: boolean;
 }
 
-export function ReactionPicker({ userReaction, onReact, onHover, topTypes, summaryText, onSummaryClick, loading = false }: ReactionPickerProps) {
+export function ReactionPicker({ userReaction, onReact, onHover, topTypes, summaryText, onSummaryClick }: ReactionPickerProps) {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const [justReacted, setJustReacted] = useState(false);
@@ -152,15 +151,10 @@ export function ReactionPicker({ userReaction, onReact, onHover, topTypes, summa
         onPointerUp={handlePointerUp}
         onPointerCancel={handlePointerCancel}
         onClick={handleClick}
-        disabled={loading}
         className="flex items-center touch-none select-none"
         style={activeColor ? { color: activeColor } : {}}
       >
-        {loading ? (
-          <div className="w-4 h-4 border border-current border-t-transparent rounded-full animate-spin" />
-        ) : (
-          renderInlineIcon()
-        )}
+        {renderInlineIcon()}
       </button>
 
       {/* Summary text */}

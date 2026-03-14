@@ -78,8 +78,10 @@ export function ArticleActionsMenu({ articleId, authorId, articleTitle, onDelete
     if (!isOpen) return;
     const close = () => setIsOpen(false);
     window.addEventListener("scroll", close, { passive: true, capture: true });
+    window.addEventListener("touchstart", close, { passive: true });
     return () => {
       window.removeEventListener("scroll", close, true);
+      window.removeEventListener("touchstart", close);
     };
   }, [isOpen]);
 

@@ -26,7 +26,7 @@ export function LoadingScreen() {
       style={{ opacity: show ? 1 : 0 }}
     >
       {/* Logo mark */}
-      <div className="relative w-16 h-16">
+      <div className="relative w-20 h-20">
         {/* Orbiting dots */}
         <div className="absolute inset-0" style={{ animation: "nb-orbit 3s linear infinite" }}>
           <div

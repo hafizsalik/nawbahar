@@ -1,4 +1,5 @@
-import { playClickSound } from "@/lib/sounds";
+import { useState, useCallback, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 /** Reaction keys — rendered as Lucide outline icons */
 export const REACTION_KEYS = ["like", "love", "insightful", "laugh", "sad"] as const;
@@ -53,11 +54,9 @@ const EMPTY_SUMMARY: ReactionSummary = {
 export function useCardReactions(articleId: string, autoFetch = true) {
   const [summary, setSummary] = useState<ReactionSummary>(EMPTY_SUMMARY);
   const [fetched, setFetched] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
 
   const fetchReactions = useCallback(async () => {
-    setLoading(true);
     const { data: { session } } = await supabase.auth.getSession();
     const currentUserId = session?.user?.id || null;
     setUserId(currentUserId);
@@ -71,7 +70,6 @@ export function useCardReactions(articleId: string, autoFetch = true) {
     if (!reactions || reactions.length === 0) {
       setSummary(EMPTY_SUMMARY);
       setFetched(true);
-      setLoading(false);
       return;
     }
 
@@ -107,7 +105,6 @@ export function useCardReactions(articleId: string, autoFetch = true) {
 
     setSummary({ topTypes, totalCount: reactions.length, reactorNames, userReaction });
     setFetched(true);
-    setLoading(false);
   }, [articleId]);
 
   // Auto-fetch on mount for persistent display
@@ -116,26 +113,6 @@ export function useCardReactions(articleId: string, autoFetch = true) {
       fetchReactions();
     }
   }, [autoFetch, fetched, fetchReactions]);
-
-  // Subscribe to realtime updates
-  useEffect(() => {
-    const channel = supabase
-      .channel(`reactions-${articleId}`)
-      .on('postgres_changes', {
-        event: '*',
-        schema: 'public',
-        table: 'reactions',
-        filter: `article_id=eq.${articleId}`,
-      }, () => {
-        // Refetch on any change
-        if (fetched) fetchReactions();
-      })
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [articleId, fetched, fetchReactions]);
 
   const ensureFetched = useCallback(async () => {
     if (!fetched) await fetchReactions();
@@ -148,7 +125,6 @@ export function useCardReactions(articleId: string, autoFetch = true) {
     const uid = session?.user?.id;
     if (!uid) return false;
 
-    setLoading(true);
     if (summary.userReaction === type) {
       await supabase.from("reactions").delete().eq("article_id", articleId).eq("user_id", uid);
     } else if (summary.userReaction) {
@@ -157,10 +133,9 @@ export function useCardReactions(articleId: string, autoFetch = true) {
       await supabase.from("reactions").insert({ article_id: articleId, user_id: uid, reaction_type: type });
     }
 
-    playClickSound();
     await fetchReactions();
     return true;
   };
 
-  return { summary, loading, userId, toggleReaction, ensureFetched, fetched };
+  return { summary, loading: false, userId, toggleReaction, ensureFetched, fetched };
 }

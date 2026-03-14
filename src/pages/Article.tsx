@@ -109,26 +109,6 @@ const Article = () => {
     setLoading(false);
   };
 
-  useEffect(() => {
-    if (id) fetchArticle(id);
-  }, [id]);
-
-  // Refetch when coming back online
-  useEffect(() => {
-    const handleOnline = () => {
-      if (id) fetchArticle(id);
-    };
-    window.addEventListener("app-online", handleOnline);
-    return () => window.removeEventListener("app-online", handleOnline);
-  }, [id]);
-
-  useEffect(() => {
-    if (window.location.hash === "#comments" && !loading) {
-      const el = document.getElementById("comments");
-      if (el) setTimeout(() => el.scrollIntoView({ behavior: "smooth" }), 100);
-    }
-  }, [loading]);
-
   const handleShare = async () => {
     const url = `${window.location.origin}/article/${id}`;
     if (navigator.share) {

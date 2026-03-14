@@ -1,8 +1,7 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { validation } from "@/lib/errorHandler";
-import { playSubmitSound } from "@/lib/sounds";
 
 export interface Comment {
   id: string;
@@ -36,41 +35,6 @@ export function useComments(articleId: string, options?: UseCommentsOptions) {
     } else {
       setLoading(false);
     }
-
-    // Subscribe to realtime updates
-    const channel = supabase
-      .channel(`comments-${articleId}`)
-      .on("postgres_changes", {
-        event: "*",
-        schema: "public",
-        table: "comments",
-        filter: `article_id=eq.${articleId}`,
-      }, (payload) => {
-        if (payload.eventType === "INSERT") {
-          const newComment = payload.new as any;
-          setComments(prev => {
-            const exists = prev.some(c => c.id === newComment.id);
-            if (exists) return prev;
-            return [...prev, {
-              id: newComment.id,
-              content: newComment.content,
-              created_at: newComment.created_at,
-              user_id: newComment.user_id,
-              parent_id: newComment.parent_id,
-              image_url: newComment.image_url,
-              like_count: newComment.like_count ?? 0,
-              author: undefined,
-            }];
-          });
-        } else if (payload.eventType === "DELETE") {
-          setComments(prev => prev.filter(c => c.id !== payload.old.id));
-        }
-      })
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
   }, [articleId, lazy]);
 
   const checkAuth = async () => {
@@ -83,7 +47,7 @@ export function useComments(articleId: string, options?: UseCommentsOptions) {
     
     const { data: commentsData, error } = await supabase
       .from("comments")
-      .select("id, content, created_at, user_id, parent_id, image_url, like_count")
+      .select("id, content, created_at, user_id, parent_id, image_url")
       .eq("article_id", articleId)
       .order("created_at", { ascending: true });
 
@@ -111,8 +75,7 @@ export function useComments(articleId: string, options?: UseCommentsOptions) {
         created_at: item.created_at,
         user_id: item.user_id,
         parent_id: item.parent_id,
-        image_url: item.image_url || null,
-        like_count: item.like_count ?? 0,
+        image_url: (item as any).image_url || null,
         author: profile ? {
           display_name: profile.display_name,
           avatar_url: profile.avatar_url,

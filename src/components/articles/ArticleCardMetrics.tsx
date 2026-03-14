@@ -1,4 +1,4 @@
-import { MessageSquare, CheckCheck } from "lucide-react";
+import { MessageCircle, CheckCheck } from "lucide-react";
 import { cn, toPersianNumber } from "@/lib/utils";
 import { ReactionPicker } from "./ReactionPicker";
 import { ReactionDetailsModal } from "./ReactionDetailsModal";
@@ -19,7 +19,6 @@ interface ArticleCardMetricsProps {
   reactionSummary: ReactionSummary;
   onReact: (type: ReactionKey) => void;
   onReactionHover?: () => void;
-  reactionsLoading?: boolean;
 }
 
 export function ArticleCardMetrics({
@@ -32,7 +31,6 @@ export function ArticleCardMetrics({
   reactionSummary,
   onReact,
   onReactionHover,
-  reactionsLoading = false,
 }: ArticleCardMetricsProps) {
   const { totalCount, reactorNames, userReaction } = reactionSummary;
   const [showReactionDetails, setShowReactionDetails] = useState(false);
@@ -87,7 +85,7 @@ export function ArticleCardMetrics({
                 commentsOpen ? "text-foreground" : "text-muted-foreground hover:text-foreground"
               )}
             >
-              <MessageSquare size={16} strokeWidth={2} aria-hidden="true" />
+              <MessageCircle size={14} strokeWidth={1.5} aria-hidden="true" />
               <span className="text-[11.5px]">
                 {commentCount > 0 ? `${toPersianNumber(commentCount)} نظر` : "نظر"}
               </span>
@@ -100,7 +98,6 @@ export function ArticleCardMetrics({
               topTypes={reactionSummary.topTypes}
               summaryText={reactionText || undefined}
               onSummaryClick={hasReactions ? handleSummaryClick : undefined}
-              loading={reactionsLoading}
             />
           </div>
 
