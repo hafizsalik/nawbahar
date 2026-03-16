@@ -99,7 +99,7 @@ const About = () => {
         {/* Footer */}
         <div className="text-center py-6 space-y-2">
           <p className="text-xs text-muted-foreground">
-            نسخه ۱.۰.۰ بتا
+            نسخه ۲.۱.۳
           </p>
           <p className="text-xs text-muted-foreground">
             ساخته شده با ❤️ در افغانستان
