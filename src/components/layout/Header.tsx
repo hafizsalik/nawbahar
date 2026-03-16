@@ -1,4 +1,4 @@
-import { Bell, Menu, Info, Moon, Sun, LogOut, Shield, MessageSquare } from "lucide-react";
+import { Bell, Menu, Info, Moon, Sun, LogOut, Shield, MessageSquare, Share2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useNotifications } from "@/hooks/useNotifications";
 import { useAuth } from "@/hooks/useAuth";
@@ -43,6 +43,23 @@ export function Header() {
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
   }, [menuOpen]);
+
+  const handleShareApp = async () => {
+    setMenuOpen(false);
+    const shareUrl = `${window.location.origin}`;
+    const title = "نوبهار - جامعه نخبگان";
+    const text = "نوبهار اپلیکیشن انتشار مقالات علمی و تحلیلی است. همین حالا نصب کنید!";
+    try {
+      if (navigator.share) {
+        await navigator.share({ title, text, url: shareUrl });
+      } else {
+        await navigator.clipboard.writeText(`${title} - ${shareUrl}`);
+        alert("لینک اپلیکیشن کپی شد. آن را با دوستانتان به اشتراک بگذارید.");
+      }
+    } catch {
+      // User cancelled or not supported.
+    }
+  };
 
   const handleSignOut = async () => {
     setMenuOpen(false);
@@ -128,6 +145,14 @@ export function Header() {
                     <line x1="12" y1="15" x2="12" y2="3" />
                   </svg>
                   نصب اپلیکیشن
+                </button>
+
+                <button
+                  onClick={handleShareApp}
+                  className="w-full px-3 py-2 flex items-center gap-2 text-[11.5px] text-foreground hover:bg-muted/40 transition-colors border-b border-border/30"
+                >
+                  <Share2 size={14} strokeWidth={1.5} className="text-muted-foreground" />
+                  اشتراک‌گذاری اپ
                 </button>
 
                 <button
