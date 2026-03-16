@@ -184,6 +184,7 @@ const Auth = () => {
 
             {/* Guest */}
             <button
+              type="button"
               onClick={handleGuestBrowse}
               className="text-[12px] text-muted-foreground/50 hover:text-foreground transition-colors"
             >
@@ -208,6 +209,7 @@ const Auth = () => {
         <div className="flex-1 flex items-center justify-center p-5">
           <div className="w-full max-w-sm animate-fade-in">
             <button
+              type="button"
               onClick={() => setView("welcome")}
               className="flex items-center gap-1.5 text-muted-foreground/45 hover:text-foreground mb-10 transition-colors"
             >
@@ -279,12 +281,14 @@ const Auth = () => {
 
             <div className="mt-6 text-center space-y-2">
               <button
+                type="button"
                 onClick={() => setView("register")}
                 className="text-[13px] text-muted-foreground hover:text-primary transition-colors"
               >
                 حساب ندارید؟ <span className="text-primary font-medium">ثبت‌نام کنید</span>
               </button>
               <button
+                type="button"
                 onClick={() => setView("forgot")}
                 className="text-[13px] text-primary hover:underline transition-colors"
               >
@@ -315,6 +319,7 @@ const Auth = () => {
         <div className="flex-1 flex items-center justify-center p-5">
           <div className="w-full max-w-sm animate-fade-in">
             <button
+              type="button"
               onClick={() => setView("login")}
               className="flex items-center gap-1.5 text-muted-foreground/45 hover:text-foreground mb-8 transition-colors"
             >
@@ -356,6 +361,7 @@ const Auth = () => {
 
             <div className="mt-4 text-center">
               <button
+                type="button"
                 onClick={() => setView("login")}
                 className="text-[13px] text-muted-foreground hover:text-primary transition-colors"
               >
@@ -376,6 +382,7 @@ const Auth = () => {
       <div className="flex-1 flex items-center justify-center p-5">
         <div className="w-full max-w-sm animate-fade-in">
           <button
+            type="button"
             onClick={() => setView("welcome")}
             className="flex items-center gap-1.5 text-muted-foreground/45 hover:text-foreground mb-8 transition-colors"
           >

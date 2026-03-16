@@ -398,7 +398,7 @@ const ArticleEditor = () => {
   // Build highlighted content for proofreading overlay
   const getHighlightedContent = () => {
     if (!proofActive || proofIssues.length === 0) return null;
-    let result = content;
+    const result = content;
     const parts: { text: string; issue?: ProofIssue }[] = [];
     let remaining = result;
     

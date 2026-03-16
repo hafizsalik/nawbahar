@@ -126,6 +126,7 @@ const Profile = () => {
                 </h1>
                 <div className="flex items-center gap-3 mt-1.5">
                   <button
+                    type="button"
                     onClick={() => setShowFollowers(true)}
                     className="text-[11.5px] text-muted-foreground/55 hover:text-foreground transition-colors"
                   >
@@ -142,6 +143,7 @@ const Profile = () => {
             <div className="flex items-center gap-1.5 mt-3">
               {isOwnProfile ? (
                 <button
+                  type="button"
                   onClick={() => setEditModalOpen(true)}
                   className="flex items-center gap-1 text-[10px] text-primary/70 hover:text-primary bg-primary/5 hover:bg-primary/10 rounded-full px-2.5 py-1 transition-all"
                 >

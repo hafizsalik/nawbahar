@@ -38,12 +38,14 @@ export function FollowButton({ userId, size = "sm", className }: FollowButtonPro
     <>
       {isFollowing ? (
         <button
+          type="button"
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
             handleClick();
           }}
           disabled={loading}
+          aria-pressed={true}
           className={cn(
             "text-[10px] text-muted-foreground/40 hover:text-muted-foreground transition-colors",
             className
@@ -53,12 +55,14 @@ export function FollowButton({ userId, size = "sm", className }: FollowButtonPro
         </button>
       ) : (
         <button
+          type="button"
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
             handleClick();
           }}
           disabled={loading}
+          aria-pressed={false}
           className={cn(
             "text-[10px] text-primary/70 hover:text-primary font-medium transition-colors",
             className

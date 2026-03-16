@@ -124,6 +124,7 @@ export function ProfileReviews({ profileId, isOwnProfile }: ProfileReviewsProps)
                 {text.length}/۵۰۰
               </span>
               <button
+                type="button"
                 onClick={handleSubmit}
                 disabled={!text.trim() || submitting}
                 className="flex items-center gap-1 text-[11px] text-primary hover:text-primary/80 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
@@ -177,6 +178,7 @@ export function ProfileReviews({ profileId, isOwnProfile }: ProfileReviewsProps)
                   </span>
                   {user?.id === review.reviewer_id && (
                     <button
+                      type="button"
                       onClick={() => handleDelete(review.id)}
                       className="text-muted-foreground/30 hover:text-destructive transition-colors mr-auto"
                     >

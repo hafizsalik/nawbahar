@@ -112,6 +112,7 @@ const VIP = () => {
           </h1>
           {isAdmin && !isEditing && (
             <button
+              type="button"
               onClick={() => openEditor()}
               className="p-2 text-muted-foreground/45 hover:text-foreground transition-colors"
             >
@@ -146,7 +147,7 @@ const VIP = () => {
                   className="bg-background border-border/40 h-9 text-[12px] flex-1"
                   dir="ltr"
                 />
-                <button onClick={() => { setShowImageField(false); setEditPost(prev => ({ ...prev, image_url: null })); }}
+                <button type="button" onClick={() => { setShowImageField(false); setEditPost(prev => ({ ...prev, image_url: null })); }}
                   className="p-1.5 text-muted-foreground/40 hover:text-destructive transition-colors">
                   <X size={14} />
                 </button>
@@ -175,7 +176,7 @@ const VIP = () => {
                     onChange={(e) => setEditPost(prev => ({ ...prev, link_label: e.target.value }))}
                     className="bg-background border-border/40 h-9 text-[12px] flex-1"
                   />
-                  <button onClick={() => { setShowLinkField(false); setEditPost(prev => ({ ...prev, link_url: null, link_label: null })); }}
+                  <button type="button" onClick={() => { setShowLinkField(false); setEditPost(prev => ({ ...prev, link_url: null, link_label: null })); }}
                     className="p-1.5 text-muted-foreground/40 hover:text-destructive transition-colors">
                     <X size={14} />
                   </button>
@@ -189,6 +190,7 @@ const VIP = () => {
                 {(["announcement", "editorial", "competition"] as const).map((type) => (
                   <button
                     key={type}
+                    type="button"
                     onClick={() => setEditPost(prev => ({ ...prev, type }))}
                     className={cn(
                       "px-2.5 py-1 rounded-full text-[10px] font-medium transition-colors",
@@ -201,13 +203,13 @@ const VIP = () => {
               </div>
               <div className="flex items-center gap-1">
                 {!showImageField && (
-                  <button onClick={() => setShowImageField(true)}
+                  <button type="button" onClick={() => setShowImageField(true)}
                     className="p-1.5 text-muted-foreground/40 hover:text-foreground transition-colors" title="افزودن تصویر">
                     <ImagePlus size={15} strokeWidth={1.5} />
                   </button>
                 )}
                 {!showLinkField && (
-                  <button onClick={() => setShowLinkField(true)}
+                  <button type="button" onClick={() => setShowLinkField(true)}
                     className="p-1.5 text-muted-foreground/40 hover:text-foreground transition-colors" title="افزودن لینک">
                     <Link2 size={15} strokeWidth={1.5} />
                   </button>
@@ -282,12 +284,14 @@ const VIP = () => {
                       {isAdmin && (
                         <div className="flex gap-0.5 shrink-0 pt-1">
                           <button
+                            type="button"
                             onClick={() => openEditor(post)}
                             className="p-1.5 text-muted-foreground/30 hover:text-foreground transition-colors"
                           >
                             <Edit3 size={13} />
                           </button>
                           <button
+                            type="button"
                             onClick={() => handleDelete(post.id)}
                             className="p-1.5 text-muted-foreground/30 hover:text-destructive transition-colors"
                           >

@@ -399,6 +399,23 @@ html.text-xl body { font-size: 20px; }
     animation: float 3s ease-in-out infinite;
   }
 
+  /* Respect user motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-fade-in,
+    .animate-slide-up,
+    .animate-slide-down,
+    .animate-scale-in,
+    .animate-bounce-subtle,
+    .animate-glow,
+    .animate-float,
+    .skeleton,
+    * {
+      animation: none !important;
+      transition: none !important;
+    }
+    html { scroll-behavior: auto; }
+  }
+
   .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;

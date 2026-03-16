@@ -23,6 +23,7 @@ const About = () => {
       <div className="p-4 space-y-6 animate-fade-in max-w-md mx-auto">
         {/* Back Button */}
         <button
+          type="button"
           onClick={() => navigate(-1)}
           className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
         >

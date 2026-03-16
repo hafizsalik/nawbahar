@@ -44,6 +44,7 @@ export default function Install() {
       <div className="w-full max-w-md space-y-6 animate-fade-in">
         {/* Back Button */}
         <button
+          type="button"
           onClick={() => navigate(-1)}
           className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
         >
