@@ -3,35 +3,26 @@ import { Link, useNavigate } from "react-router-dom";
 import { useNotifications } from "@/hooks/useNotifications";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserRole } from "@/hooks/useUserRole";
+import { useTheme } from "@/hooks/useTheme";
 import { toPersianNumber, cn } from "@/lib/utils";
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import nawbaharLogo from "@/assets/nawbahar-logo.png";
 
 export function Header() {
   const { unreadCount } = useNotifications();
   const { user, signOut } = useAuth();
   const { isAdmin } = useUserRole();
+  const { theme, setTheme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  const [isDark, setIsDark] = useState(() => {
-    const saved = localStorage.getItem('theme');
-    if (saved) return saved === 'dark';
-    return document.documentElement.classList.contains('dark');
-  });
+  const prefersDark = typeof window !== "undefined"
+    ? window.matchMedia("(prefers-color-scheme: dark)").matches
+    : false;
 
-
-  useEffect(() => {
-    const root = document.documentElement;
-    if (isDark) {
-      root.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      root.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
-  }, [isDark]);
+  const resolvedTheme = theme === "system" ? (prefersDark ? "dark" : "light") : theme;
+  const resolvedThemeLabel = theme === "system" ? "سیستم" : theme === "dark" ? "تاریک" : "روشن";
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -102,18 +93,53 @@ export function Header() {
             </button>
 
             {menuOpen && (
-              <div className="absolute left-0 top-full mt-1.5 w-52 bg-card border border-border rounded-xl shadow-lg animate-scale-in origin-top-left z-50 overflow-hidden">
-                {/* Theme toggle */}
-                <div className="px-3 py-2.5 border-b border-border/50">
+              <div className="absolute left-0 top-full mt-1.5 w-56 bg-card border border-border rounded-xl shadow-lg animate-scale-in origin-top-left z-50 overflow-hidden">
+                <div className="px-3 pt-2 pb-1 text-[11px] text-muted-foreground">حالت نمایش</div>
+                <div className="grid grid-cols-3 gap-1 px-2 pb-2 border-b border-border/50">
                   <button
-                    onClick={() => setIsDark(!isDark)}
+                    onClick={() => setTheme("light")}
                     className={cn(
-                      "flex items-center gap-1.5 text-[11px] px-2 py-1 rounded-full transition-all",
-                      isDark ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
+                      "rounded-md py-1 text-[11px] transition-colors",
+                      theme === "light"
+                        ? "bg-primary/10 text-primary"
+                        : "bg-muted/60 text-muted-foreground hover:bg-muted"
                     )}
                   >
-                    {isDark ? <Moon size={13} strokeWidth={1.5} /> : <Sun size={13} strokeWidth={1.5} />}
-                    {isDark ? "تاریک" : "روشن"}
+                    <Sun size={12} className="inline mr-1" /> روشن
+                  </button>
+                  <button
+                    onClick={() => setTheme("dark")}
+                    className={cn(
+                      "rounded-md py-1 text-[11px] transition-colors",
+                      theme === "dark"
+                        ? "bg-primary/10 text-primary"
+                        : "bg-muted/60 text-muted-foreground hover:bg-muted"
+                    )}
+                  >
+                    <Moon size={12} className="inline mr-1" /> تاریک
+                  </button>
+                  <button
+                    onClick={() => setTheme("system")}
+                    className={cn(
+                      "rounded-md py-1 text-[11px] transition-colors",
+                      theme === "system"
+                        ? "bg-primary/10 text-primary"
+                        : "bg-muted/60 text-muted-foreground hover:bg-muted"
+                    )}
+                  >
+                    {resolvedTheme === "dark" ? <Moon size={12} className="inline mr-1" /> : <Sun size={12} className="inline mr-1" />} سیستم
+                  </button>
+                </div>
+                <div className="px-3 py-2.5 border-b border-border/50">
+                  <button
+                    onClick={toggleTheme}
+                    className={cn(
+                      "flex items-center gap-1.5 text-[11px] px-2 py-1 rounded-full transition-all w-full",
+                      resolvedTheme === "dark" ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
+                    )}
+                  >
+                    {resolvedTheme === "dark" ? <Moon size={13} strokeWidth={1.5} /> : <Sun size={13} strokeWidth={1.5} />}
+                    {resolvedThemeLabel}
                   </button>
                 </div>
 
